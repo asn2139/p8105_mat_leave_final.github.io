@@ -5,8 +5,12 @@ output: html_document
 
 ## Spatial Analysis 
 
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_knit$set(root.dir = "~/Documents/Fall2020/DataScience/p8105_maternity_leave_nyc/map")
+```
+
+
 ```{r}
-setwd("~/Documents/Fall2020/DataScience/p8105_mat_leave_final.github.io/map")
 
 library(tidyverse)
 library(spdep)
@@ -110,24 +114,25 @@ library(plotly)
 library(janitor)
 
 cleaned_wfls = 
-  read_csv("./data/cleaned_wfls.csv")
+  read_csv("~/Documents/Fall2020/DataScience/p8105_mat_leave_final.github.io/data/cleaned_wfls.csv")
 
 zipcodes =
-  read_xlsx("./data/zip_codes.xlsx") %>% 
+  read_xlsx("~/Documents/Fall2020/DataScience/p8105_mat_leave_final.github.io/data/zip_codes.xlsx") %>% 
   mutate(zipcode = as.character(zipcode))
 
 merged_wfls = 
   left_join(cleaned_wfls, zipcodes, by = "zipcode")
 
-write.csv(merged_wfls, "./data/merged_wfls.csv")
+write.csv(merged_wfls, "~/Documents/Fall2020/DataScience/p8105_mat_leave_final.github.io/data/merged_wfls.csv")
 
 ```
 
 ```{r}
 library(readr)
 linear_df = 
- read_csv("./data/merged_wfls.csv")
-View(merged_wfls)
+ read_csv("~/Documents/Fall2020/DataScience/p8105_mat_leave_final.github.io/data/merged_wfls.csv")
+
+
 merged.lm <- lm(unpaid_leave_weeks~job_type + partner + leave_weeks + education + race + family_income + borough, data=linear_df)
 summary(merged.lm)
 modelr::add_residuals(linear_df, merged.lm)
