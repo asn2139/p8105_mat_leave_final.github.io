@@ -99,6 +99,8 @@ merged_wfls =
   left_join(cleaned_wfls, zipcodes, by = "zipcode")
 
 write.csv(merged_wfls, "./data/merged_wfls.csv")
+
+merged_wfls
 ```
 
 ## Exploratory Anlaysis  

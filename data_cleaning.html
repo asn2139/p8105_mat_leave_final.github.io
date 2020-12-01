@@ -403,6 +403,7 @@ $(document).ready(function () {
       zipcode = fixd2) %&gt;% 
   select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;: &quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;d4_2&quot;, &quot;unemploy_reason&quot;, &quot;bf1_1&quot;, &quot;d7&quot;, &quot;d4_1&quot;, &quot;cp1&quot;, &quot;el3&quot;)
 
+wfls_df=
 wfls_df %&gt;% 
   mutate(
     race_num = race,
@@ -412,24 +413,7 @@ wfls_df %&gt;%
     mean_leave_weeks = mean(leave_weeks)) %&gt;% 
   select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;: &quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;postpartum_check&quot;) %&gt;% 
   select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;:&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;postpartum_check&quot;) %&gt;% 
-  select(&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;zipcode&quot;)</code></pre>
-<pre><code>## # A tibble: 1,063 x 16
-##      es3 SAMP_WEIGHT POP_WEIGHT leave_type leave_weeks ulw_recode
-##    &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;
-##  1    77       0.711       72.5 Paid                 8         NA
-##  2    12       1.35       138.  Both                 4         NA
-##  3     1       1.76       179.  &lt;NA&gt;                NA         NA
-##  4     1       2.41       245.  Paid                 1         NA
-##  5    77       1.08       110.  &lt;NA&gt;                NA         NA
-##  6     2       0.531       54.2 Paid                 4         NA
-##  7    99       0.793       80.9 Unpaid              12         12
-##  8    12       1.17       119.  Paid                 8         NA
-##  9     9       0.455       46.4 Unpaid              11         11
-## 10     1       1.70       173.  Did not t…          NA         NA
-## # … with 1,053 more rows, and 10 more variables: unpaid_leave_weeks &lt;dbl&gt;,
-## #   pct_unpaid &lt;dbl&gt;, partner &lt;chr&gt;, education &lt;chr&gt;, race &lt;chr&gt;,
-## #   job_type &lt;chr&gt;, unemploy_reason &lt;chr&gt;, food_insecurity &lt;dbl&gt;,
-## #   family_income &lt;chr&gt;, zipcode &lt;chr&gt;</code></pre>
+  select(&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;zipcode&quot;,&quot;postpartum_check&quot;)</code></pre>
 <p>Save cleaned data set and merge with NYC zipcodes data</p>
 <pre class="r"><code>write.csv(wfls_df, &quot;./data/cleaned_wfls.csv&quot;)</code></pre>
 <p>Merge Datasets</p>
