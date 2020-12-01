@@ -1,0 +1,274 @@
+---
+title: "Spacial Distribution of Maternity Leave"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    code_folding: hide
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, message = FALSE}
+library(tidyverse)
+library(plotly)
+library(flexdashboard)
+library(shiny)
+library (tigris)
+library(rgdal)
+library(leaflet)
+library(rsconnect)
+library(tidyverse)
+library(spdep)
+library(maptools)
+library(rgdal)
+library(spatialreg)
+library(sf)
+```
+
+We created a series of leaflet maps to understand how type and length of maternity leave vary by NYC zip code and borough among 2016 Work and Family Leave Survey participants. We also mapped key sociodemographic characteristics that we believed could influence maternity leave length.
+
+A few notes about the maps:
+
+* Click on a map tile to display the neighborhood name. 
+* Each zip code appears in a color representing the category reported by the largest percentage of respondents.
+* Zip codes in grey had less than 2 respondents who provided responses for a given variable.
+* Visit our [project report](project_report.html) page for more details on how variables were selected and generated.
+
+
+```{r, results = FALSE}
+#load NYC map polygon files from map folder
+
+zips = readOGR("~/Documents/Fall2020/DataScience/p8105_maternity_leave_nyc/map/nyc_only_zips.shp", layer = "nyc_only_zips")
+
+# develop colors palates for leaflet maps
+
+lvtypepal <- colorFactor(topo.colors(3), zips$leavetype, na.color = NA)
+
+wksunpaidpal_2 <- colorNumeric(
+  palette = "viridis",
+  domain = as.numeric(zips$wksunpaid), na.color = NA)
+
+parentpal <- colorFactor(topo.colors(3), zips$parenttype, na.color = NA)
+
+edpal <- colorFactor(topo.colors(3), zips$edtype, na.color = NA)
+
+racepal <- colorFactor(topo.colors(3), zips$race, na.color = NA)
+
+jobtypepal <- colorFactor(topo.colors(3), zips$jobtypefix, na.color = NA)
+
+incomepal <- colorFactor(topo.colors(3), zips$X.family_in, na.color = NA)
+
+foodpal <- colorFactor(topo.colors(3), zips$X.food_inse, na.color = NA)
+
+#define labels for leaflet map legends
+
+type_lab = c("Paid", "Unpaid", "Both", "Did not take time off")
+
+income_lab= c("$16,000 or less", "", "", "", "", "", "More than $85,000")
+
+race_lab= c("White", "Black/African American", "Asian", "Hispanic")
+
+job_lab= c("Government", "Private", "Non-profit", "Self-employed")
+
+ed_lab= c("No high school degree", "^", "^", "High school degree / GED", "Some college or technical school", "Four year college or higher")
+
+food_lab = c("No", "Yes")
+
+parent_lab = c("Co-parent", "Single parent")
+```
+
+### Type of Leave (Paid vs Unpaid)
+
+```{r}
+leavetype = 
+leaflet(zips) %>% 
+    addPolygons(popup = ~X.neighborh, color = "#444444", weight = 1, smoothFactor = 0.5,
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE),
+    opacity = 1.0, fillOpacity = 0.5,
+    fillColor = ~lvtypepal(zips$leavetype)) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addLegend("bottomright", pal = lvtypepal, values = ~leavetype,
+    title = "Leave Type",
+    opacity = 0.5,
+    labFormat = function(type, cuts, p){
+      paste0(type_lab)
+    })
+
+leavetype
+```
+
+This map indicates that respondents living in zip codes within Brooklyn and the Bronx reported not taking time off of of work or taking unpaid leave after giving birth most often. Respondents in zip codes in lower Manhattan and Queens primarily took paid maternity leave.
+
+### Unpaid Weeks of Leave
+
+We decided to take a closer look at unpaid leave, as taking unpaid leave can result in a substantial loss of income for many new mothers and families. 
+
+```{r}
+wksunpaid = 
+leaflet(zips) %>% 
+    addPolygons(popup = ~X.neighborh, color = "#444444", weight = 1, smoothFactor = 0.5,
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE),
+    opacity = 1.0, fillOpacity = 0.5,
+    fillColor = ~wksunpaidpal_2(as.numeric(zips$wksunpaid))) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addLegend("bottomright", pal = wksunpaidpal_2, values = as.numeric(zips$wksunpaid),
+    title = "Weeks of Unpaid Leave",
+    opacity = 0.5)
+
+wksunpaid
+  
+```
+
+Unsurprisingly given economic and career constaints, across New York City, few women who participated in the survey took more than 10 to 20 weeks of unpaid maternity leave after giving birth. 
+
+This map shows that survey respondents from Upper Manhattan, specifically the neighborhoods of Inwood, Washington Heights, and Central Bronx, reported taking the most weeks of unpaid leave. 
+
+### Family Income
+
+```{r}
+income = 
+leaflet(zips) %>% 
+    addPolygons(popup = ~X.neighborh, color = "#444444", weight = 1, smoothFactor = 0.5,
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE),
+    opacity = 1.0, fillOpacity = 0.5,
+    fillColor = ~incomepal(zips$X.family_in)) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addLegend("bottomright", pal = incomepal, values = ~X.family_in,
+    title = "Race",
+    opacity = 0.5,
+    labFormat = function(type, cuts, p){
+      paste0(income_lab)
+    })
+
+income
+```
+
+A larger percentage of respondents in zip codes within lower and middle Manhattan and the western edges of Brooklyn and Queens reported higher household incomes. In a number of neighborhoods in southern Brooklyn and Queens, including Sunset Park, Borough Park, West Queens, Central Queens, and Southwest Queens, the majority of respondents made less than $16,000 per year.
+
+### Food Insecurity
+
+
+```{r}
+food_insecurity = 
+leaflet(zips) %>% 
+    addPolygons(popup = ~X.neighborh, color = "#444444", weight = 1, smoothFactor = 0.5,
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE),
+    opacity = 1.0, fillOpacity = 0.5,
+    fillColor = ~foodpal(zips$X.food_inse)) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addLegend("bottomright", pal = foodpal, values = ~X.food_inse,
+    title = "Food Insecurity",
+    opacity = 0.5,
+    labFormat = function(type, cuts, p){
+      paste0(food_lab)
+    })
+
+food_insecurity
+```
+
+Zip codes where over 50% of respondents were classified as food insecure are shown in yellow. Women in eastern Brooklyn, upper Manhattan, and the Bronx reported food insecurity most often.
+
+_Note: We defined food insecurity as a response of yes to the question: "In the last 30 days, have you been concerned about having enough food to feed you or your family?" or reporting having received food stamps or money to buy food during pregnancy and/or in the year after giving birth._
+
+### Race
+
+```{r}
+race = 
+leaflet(zips) %>% 
+    addPolygons(popup = ~X.neighborh, color = "#444444", weight = 1, smoothFactor = 0.5,
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE),
+    opacity = 1.0, fillOpacity = 0.5,
+    fillColor = ~racepal(zips$race)) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addLegend("bottomright", pal = racepal, values = ~race,
+    title = "Race",
+    opacity = 0.5,
+    labFormat = function(type, cuts, p){
+      paste0(race_lab)
+    })
+
+race
+```
+
+Respondents from Long Island, middle and lower Manhattan, and the western sides of Brooklyn and Queens were predominantly White. Respondents from neighborhoods in eastern Brooklyn and Queens were majority Black / African American. In upper Manhattan, the majority of respondents reported Hispanic race or ethnicity. 
+
+No zip codes had a majority of Native Hawaiian, Other Pacific Islander, American Indian, Alaska Native respondents or respondents who reported another race or multiple races, although these groups were included in later analyses.
+
+### Education Level 
+
+```{r}
+edtype = 
+leaflet(zips) %>% 
+    addPolygons(popup = ~X.neighborh, color = "#444444", weight = 1, smoothFactor = 0.5,
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE),
+    opacity = 1.0, fillOpacity = 0.5,
+    fillColor = ~edpal(zips$edtype)) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+     addLegend("bottomright", pal = edpal, values = ~edtype,
+    title = "Education Level",
+    opacity = 0.5,
+    labFormat = function(type, cuts, p){
+      paste0(ed_lab)
+    })
+
+edtype
+```
+
+Across the NYC zip codes, the majority of respondents had at least a high school diploma or GED. Having a four year college degree or higher was more common in lower and middle Manhattan and the western side of Brooklyn and Queens. 
+
+### Co-parenting Status
+
+```{r}
+parenttype = 
+leaflet(zips) %>% 
+    addPolygons(popup = ~X.neighborh, color = "#444444", weight = 1, smoothFactor = 0.5,
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE),
+    opacity = 1.0, fillOpacity = 0.5,
+    fillColor = ~parentpal(zips$parenttype)) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+    addLegend("bottomright", pal = parentpal, values = ~parenttype,
+    title = "Co-parenting Status",
+    opacity = 0.5,
+    labFormat = function(type, cuts, p){
+      paste0(parent_lab)
+    })
+
+parenttype
+```
+
+There were few zip codes where over 50% of respondents were single parents rather than co-parents. 
+
+### Employer Type
+```{r}
+jobtype = 
+leaflet(zips) %>% 
+    addPolygons(popup = ~X.neighborh, color = "#444444", weight = 1, smoothFactor = 0.5,
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE),
+    opacity = 1.0, fillOpacity = 0.5,
+    fillColor = ~jobtypepal(zips$jobtypefix)) %>% 
+  addProviderTiles(providers$CartoDB.Positron) %>% 
+  addLegend("bottomright", pal = jobtypepal, values = ~jobtypefix,
+    title = "Employer type",
+    opacity = 0.5,
+    labFormat = function(type, cuts, p){
+      paste0(job_lab)
+    })
+
+jobtype
+```
+
+The majority of respondents across zip codes were employed by private companies. However, certain areas, such as Inwood and Washington Heights in Manhattan and Canarsie and Flatlands in Southern Brooklyn had large concentrations of government employees. In zip codes where the majority of respondents held high household incomes, such as the Upper West Side and Northwest Brooklyn, more respondents were self-employed.
+
+
+### Summary
+
+Overall, these maps suggest that type of maternity leave, length of unpaid leave, and sociodemographic characteristics are clustered geographically in New York City. We performed a spacial analysis and regression to formerly test these associations, the results of which can be found on our [regression page](add regression HTML).
