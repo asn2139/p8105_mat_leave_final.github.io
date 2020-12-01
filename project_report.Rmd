@@ -149,3 +149,53 @@ ggplotly(unpaid)
 
 
 The visualizations illustrate that weeks of leave do not substantially differ by race. For paid and unpaid leave, mothers who identify as American Indian/AN take slightly more weeks of leave. Mothers who identify as American Indian/AN also have higher spread of length of leave. 
+
+
+### **Leave and Parenting Status**
+```{r}
+parent = 
+  merged_wfls %>% 
+  drop_na(partner) %>% 
+  drop_na(leave_weeks) %>%
+ ggplot(aes(x = partner, y = leave_weeks, fill = partner, alpha = 0.9)) +
+  geom_boxplot() +
+  labs(
+    title = "Weeks of maternity leave by co-parenting status",
+    x = "Co-parenting status",
+    y = "Weeks of leave"
+  )
+ggplotly(parent)
+```
+
+This visualization shows that there is not a substantial difference of length of leave between mothers who are co-parents and single parents. 
+
+
+### **Leave and Income**
+
+```{r}
+unpaid = 
+merged_wfls %>% 
+drop_na(family_income) %>% 
+drop_na(unpaid_leave_weeks) %>% 
+mutate(food_insecurity = as.character(food_insecurity), 
+       food_insecurity = case_when(
+         food_insecurity == '0' ~ "no", 
+         food_insecurity == '1' ~ "yes"), 
+       family_income = fct_reorder(family_income, es3)) %>% 
+   ggplot(aes(x = family_income, y = unpaid_leave_weeks, color = food_insecurity)) +
+  geom_point() + 
+theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) +
+  ylim(0, 80) + 
+  labs(
+    title = "Unpaid maternity leave by income",
+    x = "Family income",
+    y = "Weeks of unpaid leave", 
+    color = "Food insecurity"
+  )
+
+ggplotly(unpaid)
+
+```
+
+This plot shows that mothers who are food insecure are clustered towards the lower side of family income. Mothers who are food insecure tend to have a family income less than 40,000. Mothers whose family income is between 16,001 and 20,000 tend to have the shortest amount of unpaid leave. 
+
