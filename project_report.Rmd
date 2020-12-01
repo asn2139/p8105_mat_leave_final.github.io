@@ -86,3 +86,66 @@ NYC zipcodes by neighborhood and borough came from the [New York State Departmen
 ### **Data Cleaning**
 
 Read in data, create new variables, and select key variables for analysis
+
+```{r}
+cleaned_wfls = 
+  read_csv("./data/cleaned_wfls.csv")
+
+zipcodes =
+  read_xlsx("./data/zip_codes.xlsx") %>% 
+  mutate(zipcode = as.character(zipcode))
+
+merged_wfls = 
+  left_join(cleaned_wfls, zipcodes, by = "zipcode")
+
+write.csv(merged_wfls, "./data/merged_wfls.csv")
+```
+
+## Exploratory Anlaysis  
+
+### **Leave and Race**
+
+
+```{r}
+
+merged_wfls
+
+  leave=
+  merged_wfls %>% 
+  drop_na(race) %>% 
+  drop_na(leave_weeks) %>% 
+ mutate(race = fct_reorder(race, leave_weeks)) %>% 
+  ggplot(aes(x = race, y = leave_weeks, fill = race, alpha = 0.9)) + 
+    geom_boxplot() + 
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1), legend.position = "none") +
+  labs(
+    title = "Weeks of maternity leave by race",
+    x = "Race",
+    y = "Weeks of leave"
+  )
+
+ggplotly(leave)
+```
+
+```{r}
+unpaid = 
+  merged_wfls %>% 
+  drop_na(race) %>% 
+  drop_na(unpaid_leave_weeks) %>% 
+  drop_na(leave_weeks) %>% 
+ mutate(race = fct_reorder(race, leave_weeks)) %>% 
+  ggplot(aes(x = race, y = unpaid_leave_weeks, fill = race, alpha = 0.9)) + 
+    geom_boxplot() + 
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1), legend.position = "none") +
+  ylim(0, 50) + 
+  labs(
+    title = "Unpaid maternity leave by race",
+    x = "Race",
+    y = "Unpaid Weeks of leave"
+  )
+
+ggplotly(unpaid)
+```
+
+
+The visualizations illustrate that weeks of leave do not substantially differ by race. For paid and unpaid leave, mothers who identify as American Indian/AN take slightly more weeks of leave. Mothers who identify as American Indian/AN also have higher spread of length of leave. 
