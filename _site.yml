@@ -8,7 +8,8 @@ navbar:
     - text: "Project Report"
       href: project_report.html
     - text: "Spatial Analysis & Regression"
-      right: leaflet.html   
+      href: leaflet.html  
+  right:  
     - text: "Conclusions"
       href: conclusions.html
     - icon: fa-youtube fa-lg
