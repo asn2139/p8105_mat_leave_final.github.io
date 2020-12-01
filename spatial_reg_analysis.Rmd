@@ -6,7 +6,6 @@ output: html_document
 ## Spatial Analysis 
 
 ```{r}
-
 setwd("~/Documents/Fall2020/DataScience/p8105_mat_leave_final.github.io/map")
 
 library(tidyverse)
