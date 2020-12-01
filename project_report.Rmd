@@ -199,3 +199,103 @@ ggplotly(unpaid)
 
 This plot shows that mothers who are food insecure are clustered towards the lower side of family income. Mothers who are food insecure tend to have a family income less than 40,000. Mothers whose family income is between 16,001 and 20,000 tend to have the shortest amount of unpaid leave. 
 
+### **Returning to Work**
+
+```{r}
+unemploy = 
+merged_wfls %>% 
+  drop_na(unemploy_reason) %>% 
+  ggplot(aes(y = unemploy_reason, fill = race)) + geom_bar(position = "dodge") + 
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
+  labs(
+    title = "Reasons for Unemployment",
+    x = "Count",
+    y = "Reason") 
+
+ggplotly(unemploy)
+```
+
+
+```{r}
+unemploy2 = 
+merged_wfls %>% 
+  drop_na(unemploy_reason) %>% 
+  ggplot(aes(y = unemploy_reason, fill = education)) + geom_bar(position = "dodge") + 
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
+  labs(
+    title = "Reasons for Unemployment",
+    x = "Count",
+    y = "Reason") 
+
+ggplotly(unemploy2)
+```
+
+
+These visualizations shed light on the reason mothers were not back at work at the time of the survey. Choosing to stay at home was the most common response. However, it was disproportionately cited by mothers who were white and mothers who had a 5 year education or higher. 
+
+### **Post Partum Check Up Status**
+```{r}
+
+check = 
+merged_wfls %>% 
+  drop_na(family_income) %>% 
+  drop_na(postpartum_check) %>% 
+  mutate(
+    family_income = fct_reorder(family_income, es3)) %>% 
+  ggplot(aes(x = postpartum_check, fill = family_income)) + geom_bar(position = "dodge") + 
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
+  labs(
+    title = "Postpartum Check",
+    x = "Postpartum Check status",
+    y = "Count") 
+
+ggplotly(check)
+
+
+```
+
+```{r}
+check = 
+merged_wfls %>% 
+  drop_na(family_income) %>% 
+  drop_na(postpartum_check) %>% 
+  mutate( 
+     family_income = fct_reorder(family_income, es3)) %>% 
+  ggplot(aes(x = family_income, fill = postpartum_check)) + geom_bar(position = "stack") + 
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
+  labs(
+    title = "Postpartum Checkup Status by Income",
+    x = "Family Income",
+    y = "Count", 
+    fill = "Checkup Status") 
+
+ggplotly(check)
+```
+
+note: made proportion but looked like last hw and wasn't exciting b/c all well over .9
+
+Across all income categories, over 90% of mothers received a postpartum check up 4-6 weeks after giving birth. Mothers with a lower family income were more likely to not get a postpartum check up. 
+
+
+
+### **Unpaid Leave and Job Type**
+```{r}
+job_type = 
+  merged_wfls %>%  
+  drop_na(job_type) %>% 
+  drop_na(unpaid_leave_weeks) %>% 
+  ggplot(aes(x = job_type, y = unpaid_leave_weeks, fill = job_type, alpha = 0.9)) + 
+  geom_boxplot() + 
+  ylim(0, 50) + 
+  labs(
+    title = "Unpaid Leave Weeks by Job Type",
+    x = "Job type",
+    y = "Unpaid Leave Weeks") + 
+  theme(legend.position = "none")
+
+ggplotly(job_type)
+```
+
+This visualization shows that mothers who were self-employed were slightly more likely to have longer unpaid leave weeks. However, these values did not value substantially across groups. 
+
+## NYC Health Report and Related Work
