@@ -5,6 +5,8 @@ navbar:
   left:
     - text: "About"
       href: about.html
+    - text: "Project Report"
+      href: project_report.html
   right:    
     - text: "Conclusions"
       href: conclusions.html
