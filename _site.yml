@@ -10,6 +10,8 @@ navbar:
     - text: "Leaflet Maps"
       href: leaflet.html  
   right:  
+    - text: "Spatial Regression and Analysis"
+      href: spatial_reg_analysis.html
     - text: "Conclusions"
       href: conclusions.html
     - icon: fa-youtube fa-lg
