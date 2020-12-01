@@ -7,7 +7,8 @@ navbar:
       href: about.html
     - text: "Project Report"
       href: project_report.html
-  right:    
+    - text: "Leaflet Maps"
+      right: leaflet.html   
     - text: "Conclusions"
       href: conclusions.html
     - icon: fa-youtube fa-lg
