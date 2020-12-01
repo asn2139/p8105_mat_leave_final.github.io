@@ -1,0 +1,164 @@
+---
+title: "Spatial Analysis & Regression"
+output: html_document
+---
+
+## Spatial Analysis 
+
+```{r}
+
+setwd("~/Documents/Fall2020/DataScience/p8105_mat_leave_final.github.io/map")
+
+library(tidyverse)
+library(spdep)
+library(maptools)
+library(rgdal)
+library(spatialreg)
+library(sf)
+unpaid_poly <- readOGR(dsn = "nyc_only_zips.shp", layer = "nyc_only_zips")
+names(unpaid_poly)
+```
+
+### Creating a queen's neighborhood weight matrix using the poly2nb command.
+
+```{r}
+unpaid_nbq <- poly2nb(unpaid_poly)
+```
+
+### Extracting coordinates to plot the connectivity matrix for potential visualization.
+
+```{r}
+coords <- coordinates(unpaid_poly)
+plot(unpaid_poly)
+plot(unpaid_nbq, coords, add=T)
+```
+
+
+### Converting the neighborhood matrix into a list so that the connections between counties can be used in Moran's I test.
+```{r}
+summary(unpaid_nbq)
+unpaid_nbq_w <- nb2listw(unpaid_nbq, zero.policy=TRUE)
+```
+
+### Converting Exposure variable to z-form and then create the lag of that variable.
+```{r}
+unpaid_poly$swksunpaid <- scale(as.numeric(unpaid_poly$wksunpaid))
+unpaid_poly$lag_sWU <- lag.listw(unpaid_nbq_w, unpaid_poly$swksunpaid, zero.policy=TRUE, NAOK=TRUE)
+summary(unpaid_poly$swksunpaid)
+summary(unpaid_poly$lag_sWU)
+names(unpaid_poly)
+head(unpaid_poly)
+unpaid_data <- as.data.frame(unpaid_poly)
+head(unpaid_data)
+```
+
+### Running the Univariate Moran's I test.
+```{r}
+moran.test(unpaid_poly$swksunpaid, listw=unpaid_nbq_w, na.action = na.omit, zero.policy = TRUE)
+```
+
+### Results: Moran's I statistic: 0.055, p-value = 0.2131
+
+## REGRESSION
+
+###Test baseline linear model.
+
+```{r}
+unpaid.lm <- lm(wksunpaid~jobtypefix + parenttype + as.numeric(leaveweeks) + edtype + race + X.family_in + X.borough, data=unpaid_poly)
+summary(unpaid.lm)
+```
+
+### Output 
+
+```{r}
+unpaid.lm %>% 
+  broom::glance()
+lm_output = 
+unpaid.lm %>% 
+  broom::tidy() %>% 
+  select(term, estimate, p.value) %>% 
+  mutate(
+    term = str_replace(term, "^jobtypefix", "Job type: "),
+    term = str_replace(term, "^parenttype",  "Partner: "),
+    term = str_replace(term, "^as.numeric(leaveweeks)",  "Number of weeks on leave"),
+    term = str_replace(term, "^edtype", "Education: "),
+    term = str_replace(term, "^race", "Race: "),
+    term = str_replace(term, "^X.family_in", "Family Income: "),
+    term = str_replace(term, "^X.borough", "Borough: "),
+    term = str_replace(term, "^Job type: 2", "Job type: Private"),
+    term = str_replace(term, "^Job type: 3", "Job type: Non-profit"),
+    term = str_replace(term, "^Job type: 4", "Job type: Self-employed"),
+    term = str_replace(term, "^Partner: 2", "Partner: Single parent"),
+    term = str_replace(term, "^Education: 3", "Education: No high school degree"),
+    term = str_replace(term, "^Education: 4", "Education: High school degree/GED"),
+    term = str_replace(term, "^Education: 5", "Education: Some college or technical school"),
+    term = str_replace(term, "^Education: 6", "Education: Four-year college or higher"),
+    term = str_replace(term, "^Race: 2", "Race: Black/African American"),
+    term = str_replace(term, "^Race: 3", "Race: Asian"),
+    term = str_replace(term, "^Race: 8", "Race: Other")) %>% 
+  knitr::kable(digits = 3)
+```
+
+
+
+### Residuals
+
+```{r}
+
+library(tidyverse)
+library(readxl)
+library(plotly)
+library(janitor)
+
+cleaned_wfls = 
+  read_csv("./data/cleaned_wfls.csv")
+
+zipcodes =
+  read_xlsx("./data/zip_codes.xlsx") %>% 
+  mutate(zipcode = as.character(zipcode))
+
+merged_wfls = 
+  left_join(cleaned_wfls, zipcodes, by = "zipcode")
+
+write.csv(merged_wfls, "./data/merged_wfls.csv")
+
+```
+
+```{r}
+library(readr)
+linear_df = 
+ read_csv("./data/merged_wfls.csv")
+View(merged_wfls)
+merged.lm <- lm(unpaid_leave_weeks~job_type + partner + leave_weeks + education + race + family_income + borough, data=linear_df)
+summary(merged.lm)
+modelr::add_residuals(linear_df, merged.lm)
+modelr::add_predictions(linear_df, merged.lm)
+linear_df %>% 
+  modelr::add_residuals(merged.lm) %>% 
+  ggplot(aes(x = job_type, y = resid)) + geom_violin()
+linear_df %>% 
+  modelr::add_residuals(merged.lm) %>% 
+  ggplot(aes(x = partner, y = resid)) + geom_violin()
+linear_df %>% 
+  modelr::add_residuals(merged.lm) %>% 
+  ggplot(aes(x = leave_weeks, y = resid)) + geom_violin()
+linear_df %>% 
+  modelr::add_residuals(merged.lm) %>% 
+  ggplot(aes(x = education, y = resid)) + geom_violin()
+linear_df %>% 
+  modelr::add_residuals(merged.lm) %>% 
+  ggplot(aes(x = race, y = resid)) + geom_violin()
+linear_df %>% 
+  modelr::add_residuals(merged.lm) %>% 
+  ggplot(aes(x = family_income, y = resid)) + geom_violin()
+linear_df %>% 
+  modelr::add_residuals(merged.lm) %>% 
+  ggplot(aes(x = borough, y = resid)) + geom_violin()
+```
+
+
+## Results
+
+Because unpaid leave is likely related to income, and income is related to where a person lives, it is likely that there are spatial effects impactingrates of unpaid leave. To understand this,we ran a Univariate Local Moran's I test, which was looking for spatial clusters of high and low unpaid leave weeks. This test seeks clusters that have a high number of unpaid leave weeks within the zipcode, but also in the zipcodes surrounding it. It also looks for clusters that have low local unpaid leave weeks and low unpaid leave weeks in the zip codes surrounding it. Finally, it looks for places where there is low leave locally but high leave amongst the zip code's neighbors, and vice versa. This resulted in a Moran's I statistic of 0.055 and a p-value = 0.2131, signifying that there were not significant spatial clusters. We could not move ahead with spatial analysis due to this finding, but it is likely that spatial clustering would exist with a more representative sample of NYC. 
+
+After conducting this spatial analysis, we also ran a linear regression including a numberof important covariates identified in our exploratory analysis. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. We found an F-statistic of 6.907 with a p-value of < 0.01 on the overall regression. More specifically, we found sigificance among the number of weeks of total leave (p < 0.001). As weeks of total leave increases, so does the number of unpaid leave weeks. No other covariate was significant. This accounts for 64.35% of the relationship.
