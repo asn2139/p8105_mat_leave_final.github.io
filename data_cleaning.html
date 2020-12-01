@@ -361,8 +361,8 @@ $(document).ready(function () {
       d4_1 == &#39;4&#39; ~ &quot;Native Hawaiian/OPI&quot;,
       d4_1 == &#39;5&#39; ~ &quot;American Indian/AN&quot;,
       d4_1 == &#39;8&#39; ~ &quot;Other&quot;,
-      d3 == 1 ~ &quot;Hispanic&quot;,
-      d4_2 &gt;= 1 ~ &quot;Multiple&quot;),
+      d4_2 &gt;= 1 ~ &quot;Multiple&quot;,
+      d3 == 1 ~ &quot;Hispanic&quot;),
     job_type = case_when(
       el3 == &#39;1&#39; ~ &quot;Government&quot;,
       el3 == &#39;2&#39; ~ &quot;Private&quot;,
@@ -397,7 +397,7 @@ $(document).ready(function () {
       es1a == 4 ~ 0
     ),
     family_income = case_when(
-      es3 == &#39;1&#39; ~ &quot;Less than $16,000&quot;,
+      es3 == &#39;1&#39; ~ &quot;$16,000 or less&quot;,
       es3 == &#39;2&#39; ~ &quot;$16,001 to $20,000&quot;,
       es3 == &#39;3&#39; ~ &quot;$20,001 to 40,000&quot;,
       es3 == &#39;4&#39; ~ &quot;$20,001 to 40,000&quot;,
@@ -408,7 +408,7 @@ $(document).ready(function () {
       es3 == &#39;9&#39; ~ &quot;$40,001 to 60,000&quot;,
       es3 == &#39;10&#39; ~ &quot;$60,001 to 85,000&quot;,
       es3 == &#39;11&#39; ~ &quot;$60,001 to 85,000&quot;,
-      es3 == &#39;12&#39; ~ &quot;More than $85,000&quot;),
+      es3 == &#39;12&#39; ~ &quot;$85,000 or more&quot;),
       zipcode = fixd2) %&gt;% 
   select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;: &quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;d4_2&quot;, &quot;unemploy_reason&quot;, &quot;bf1_1&quot;, &quot;d7&quot;, &quot;d4_1&quot;, &quot;cp1&quot;, &quot;el3&quot;)
 

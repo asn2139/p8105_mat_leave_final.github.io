@@ -77,9 +77,9 @@ NYC zipcodes by neighborhood and borough came from the [New York State Departmen
 
  * `neighborhood` = neighborhood (based on five digit zip code)
  * `race` = race of survey respondent
- * `family_income` = family income as percent of the federal poverty level
+ * `family_income` = household family income
  * `food_insecurity` = concern about having enough food to feed family or receives public assistance in the form of SNAP benefits / food stamps
- * `education` = highest grade or year of school completed
+ * `education` = highest level of school completed
  * `partner` = co-parenting status (single or co-parent)
  * `employment_type` = type of employment during pregnancy (government, private company, non-profit, self-employed)
 
