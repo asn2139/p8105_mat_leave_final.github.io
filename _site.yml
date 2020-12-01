@@ -1,0 +1,25 @@
+name: "Exploring Maternity Leave in NYC"
+output_dir: "."
+navbar:
+  title: "Home"
+  left:
+    - text: "About"
+      href: about.html
+    - text: "Exploratory Analyses"
+      href: variables_mat_leave.html
+  right:    
+    - text: "Report"
+      href: project_report.html
+    - text: "Paid Leave Dashboard"
+      href: https://meb2308.shinyapps.io/meb2308_shiny/
+    - text: "Conclusions"
+      href: conclusions.html
+    - icon: fa-youtube fa-lg
+      href: https://www.youtube.com/watch?v=ahPeclU9VW0
+    - icon: fa-github fa-lg
+      href: https://github.com/meb2308/p8105_maternity_leave_nyc
+output:
+  html_document:
+    theme: cosmo
+    includes:
+      after_body: footer.html
