@@ -8,7 +8,7 @@ navbar:
     - text: "Project Report"
       href: project_report.html
     - text: "Leaflet Maps"
-      href: leaflet.html  
+      href: leaflet_final.html  
   right:  
     - text: "Spatial Regression and Analysis"
       href: spatial_reg_analysis.html
