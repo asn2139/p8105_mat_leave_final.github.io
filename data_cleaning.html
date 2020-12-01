@@ -11,7 +11,7 @@
 
 
 
-<title>Conclusions</title>
+<title>Data_Cleaning</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,11 +19,7 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -260,73 +256,7 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
 
-
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
 
 
 
@@ -336,16 +266,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -389,24 +309,141 @@ div.tocify {
 
 <div class="fluid-row" id="header">
 
-<div class="btn-group pull-right">
-<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-</ul>
-</div>
 
 
-
-<h1 class="title toc-ignore">Conclusions</h1>
+<h1 class="title toc-ignore">Data_Cleaning</h1>
 
 </div>
 
 
-<div id="conclusions" class="section level2">
-<h2>Conclusions</h2>
-</div>
+<pre class="r"><code>wfls_df = 
+  read_csv(&quot;./data/WFLS_2014.csv&quot;) %&gt;% 
+  mutate(
+    recode_el12mns = el12mns*4,
+    el11 = as.character(el11),
+    leave_type = case_when(
+      el11 == &#39;1&#39; ~ &quot;Paid&quot;,
+      el11 == &#39;2&#39; ~ &quot;Unpaid&quot;,
+      el11 == &#39;3&#39; ~ &quot;Both&quot;,
+      el11 == &#39;4&#39; ~ &quot;Did not take time off&quot;),
+    leave_weeks = coalesce(recode_el12mns, el12wks),
+    leave_weeks = na_if(leave_weeks, 77),
+    leave_weeks = na_if(leave_weeks, 99),
+    ulw_recode = case_when(
+      leave_type == &quot;Unpaid&quot; ~ leave_weeks),
+    unpaid_leave_weeks = coalesce(ulw_recode, el13d),
+    pct_unpaid = round((unpaid_leave_weeks/leave_weeks)*100),
+    partner = case_when(
+      cp1 == &#39;1&#39; ~ &quot;Co-parent&quot;,
+      cp1 == &#39;2&#39; ~ &quot;Single Parent&quot;),
+    education = case_when(
+      d7 == &#39;1&#39; ~ &quot;No high school degree&quot;,
+      d7 == &#39;2&#39; ~ &quot;No high school degree&quot;,
+      d7 == &#39;3&#39; ~ &quot;No high school degree&quot;,
+      d7 == &#39;4&#39; ~ &quot;High school degree/GED&quot;,
+      d7 == &#39;5&#39; ~ &quot;Some college or technical school&quot;,
+      d7 == &#39;6&#39; ~ &quot;Four year college or higher&quot;),
+    d4_2 = na_if(d4_2, 77),
+    d4_2 = na_if(d4_2, 99),
+    race = case_when(
+      d4_1 == &#39;1&#39; ~ &quot;White&quot;,
+      d4_1 == &#39;2&#39; ~ &quot;Black/African American&quot;,
+      d4_1 == &#39;3&#39; ~ &quot;Asian&quot;,
+      d4_1 == &#39;4&#39; ~ &quot;Native Hawaiian/OPI&quot;,
+      d4_1 == &#39;5&#39; ~ &quot;American Indian/AN&quot;,
+      d4_1 == &#39;8&#39; ~ &quot;Other&quot;,
+      d3 == 1 ~ &quot;Hispanic&quot;,
+      d4_2 &gt;= 1 ~ &quot;Multiple&quot;),
+    job_type = case_when(
+      el3 == &#39;1&#39; ~ &quot;Government&quot;,
+      el3 == &#39;2&#39; ~ &quot;Private&quot;,
+      el3 == &#39;3&#39; ~ &quot;Non-profit&quot;,
+      el3 == &#39;4&#39; ~ &quot;Self-employed&quot;), 
+    unemploy_reason = el16, 
+    unemploy_reason = case_when( 
+      el16 == &#39;1&#39; ~ &quot;Fired related to pregnancy or maternity leave&quot;, 
+      el16 == &#39;2&#39; ~ &quot;Chose to stay-at-home&quot;, 
+      el16 == &#39;3&#39; ~ &quot;Not enough flexibility&quot;, 
+      el16 == &#39;4&#39; ~ &quot;No affordable childcare&quot;, 
+      el16 == &#39;5&#39; ~ &quot;My health issues&quot;, 
+      el16 == &#39;6&#39; ~ &quot;Baby&#39;s health issues&quot;, 
+      el16 == &#39;7&#39; ~ &quot;Currently a student&quot;, 
+      el16 == &#39;8&#39; ~ &quot;Can&#39;t find work&quot;, 
+      el16 == &#39;9&#39; ~ &quot;Looking for other jobs&quot;, 
+      el16 == &#39;10&#39; ~ &quot;other&quot;) ,
+    bf1_1 = case_when(
+      bf1_1 == &#39;1&#39; ~ &quot;Never&quot;, 
+      bf1_1 == &#39;2&#39; ~ &quot;Less than 1 Week&quot;, 
+      bf1_1 == &#39;3&#39; ~ &quot;Weeks&quot;, 
+      bf1_1 == &#39;4&#39; ~ &quot;Months&quot;, 
+      bf1_1 == &#39;5&#39; ~ &quot;Still breastfeeding&quot;, 
+      bf1_1 == &#39;77&#39; ~ &quot;don&#39;t know&quot;, 
+      bf1_1 == &#39;99&#39; ~ &quot;refused&quot;), 
+    food_insecurity = case_when(
+      es2 == 1 ~ 1,
+      es1a == 1 ~ 1,
+      es1a == 2 ~ 1,
+      es1a == 3 ~ 1,
+      es2 == 0 ~ 0,
+      es1a == 4 ~ 0
+    ),
+    family_income = case_when(
+      es3 == &#39;1&#39; ~ &quot;Less than $16,000&quot;,
+      es3 == &#39;2&#39; ~ &quot;$16,001 to $20,000&quot;,
+      es3 == &#39;3&#39; ~ &quot;$20,001 to 40,000&quot;,
+      es3 == &#39;4&#39; ~ &quot;$20,001 to 40,000&quot;,
+      es3 == &#39;5&#39; ~ &quot;$20,001 to 40,000&quot;,
+      es3 == &#39;6&#39; ~ &quot;$20,001 to 40,000&quot;,
+      es3 == &#39;7&#39; ~ &quot;$40,001 to 60,000&quot;,
+      es3 == &#39;8&#39; ~ &quot;$40,001 to 60,000&quot;,
+      es3 == &#39;9&#39; ~ &quot;$40,001 to 60,000&quot;,
+      es3 == &#39;10&#39; ~ &quot;$60,001 to 85,000&quot;,
+      es3 == &#39;11&#39; ~ &quot;$60,001 to 85,000&quot;,
+      es3 == &#39;12&#39; ~ &quot;More than $85,000&quot;),
+      zipcode = fixd2) %&gt;% 
+  select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;: &quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;d4_2&quot;, &quot;unemploy_reason&quot;, &quot;bf1_1&quot;, &quot;d7&quot;, &quot;d4_1&quot;, &quot;cp1&quot;, &quot;el3&quot;)
+
+wfls_df %&gt;% 
+  mutate(
+    race_num = race,
+      postpartum_check = case_when(
+      pph1 == &#39;1&#39; ~ &quot;yes&quot;, 
+      pph1 == &#39;2&#39; ~ &quot;no&quot;), 
+    mean_leave_weeks = mean(leave_weeks)) %&gt;% 
+  select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;: &quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;postpartum_check&quot;) %&gt;% 
+  select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;:&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;postpartum_check&quot;) %&gt;% 
+  select(&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;zipcode&quot;)</code></pre>
+<pre><code>## # A tibble: 1,063 x 16
+##      es3 SAMP_WEIGHT POP_WEIGHT leave_type leave_weeks ulw_recode
+##    &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;
+##  1    77       0.711       72.5 Paid                 8         NA
+##  2    12       1.35       138.  Both                 4         NA
+##  3     1       1.76       179.  &lt;NA&gt;                NA         NA
+##  4     1       2.41       245.  Paid                 1         NA
+##  5    77       1.08       110.  &lt;NA&gt;                NA         NA
+##  6     2       0.531       54.2 Paid                 4         NA
+##  7    99       0.793       80.9 Unpaid              12         12
+##  8    12       1.17       119.  Paid                 8         NA
+##  9     9       0.455       46.4 Unpaid              11         11
+## 10     1       1.70       173.  Did not t…          NA         NA
+## # … with 1,053 more rows, and 10 more variables: unpaid_leave_weeks &lt;dbl&gt;,
+## #   pct_unpaid &lt;dbl&gt;, partner &lt;chr&gt;, education &lt;chr&gt;, race &lt;chr&gt;,
+## #   job_type &lt;chr&gt;, unemploy_reason &lt;chr&gt;, food_insecurity &lt;dbl&gt;,
+## #   family_income &lt;chr&gt;, zipcode &lt;chr&gt;</code></pre>
+<p>Save cleaned data set and merge with NYC zipcodes data</p>
+<pre class="r"><code>write.csv(wfls_df, &quot;./data/cleaned_wfls.csv&quot;)</code></pre>
+<p>Merge Datasets</p>
+<pre class="r"><code>cleaned_wfls = 
+  read_csv(&quot;./data/cleaned_wfls.csv&quot;)
+
+zipcodes =
+  read_xlsx(&quot;./data/zip_codes.xlsx&quot;) %&gt;% 
+  mutate(zipcode = as.character(zipcode))
+
+merged_wfls = 
+  left_join(cleaned_wfls, zipcodes, by = &quot;zipcode&quot;)
+
+write.csv(merged_wfls, &quot;./data/merged_wfls.csv&quot;)</code></pre>
 
 <html>
   
@@ -436,8 +473,6 @@ Additional interactivity added using <a href="https://plot.ly/">plotly</a> (v4.9
 </html>
 
 
-</div>
-</div>
 
 </div>
 
@@ -469,38 +504,7 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

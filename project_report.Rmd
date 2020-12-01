@@ -1,0 +1,88 @@
+---
+title: "Project Report Draft"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    code_folding: hide
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+library(tidyverse)
+library(readxl)
+library(plotly)
+library(janitor)
+
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%", 
+  echo = TRUE,
+  message = FALSE,
+  warning = FALSE
+)
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+<style type="text/css">
+
+h1.title {
+  text-align: center;
+}
+
+</style>
+
+## Motivation
+
+
+## Questions
+
+1. How does length of maternity leave taken by women in New York City vary according to key socioeconomic characteristics?
+
+2. How does length of maternity leave differ by zip code? Do these spacial patterns match the distribution of key socioeconomic characteristics?
+
+3. Is the geographic distribution of average length of maternity leave associated with X, Y, X?
+
+## Data 
+
+### **Data Sources**
+
+Our primary data source is the [NYC Work and Family Leave Survey (WFLS)](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe).
+
+The NYC WFLS is a telephone survey conducted in March 2016, which was administered to 1,000 New York City residents who gave birth in 2014. The goal was to understand the availability and accessibility of paid family leave to working parents. The WLFS also sought to describe the role that paid family leave policies play in achieving health equity for parents and children.
+
+NYC zipcodes by neighborhood and borough came from the [New York State Department of Health Zipcode Definitions Page](https://www.health.ny.gov/statistics/cancer/registry/appendix/neighborhoods.htm).
+
+### **Variables of interest***
+
+**Outcomes**
+
+ * `leave_weeks` = weeks of maternity leave (paid or unpaid)
+ * `paid_leave_weeks` = weeks of paid maternity leave 
+ * `unpaid_leave_weeks` = weeks of unpaid maternity leave
+ * `postpartum_check` = had a postpartum checkup 4-6 weeks after giving birth
+ 
+**Predictors**
+
+ * `neighborhood` = neighborhood (based on five digit zip code)
+ * `race` = race of survey respondent
+ * `family_income` = family income as percent of the federal poverty level
+ * `food_insecurity` = concern about having enough food to feed family or receives public assistance in the form of SNAP benefits / food stamps
+ * `education` = highest grade or year of school completed
+ * `partner` = co-parenting status (single or co-parent)
+ * `employment_type` = type of employment during pregnancy (government, private company, non-profit, self-employed)
+
+### **Data Cleaning**
+
+Read in data, create new variables, and select key variables for analysis

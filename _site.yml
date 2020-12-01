@@ -5,13 +5,7 @@ navbar:
   left:
     - text: "About"
       href: about.html
-    - text: "Exploratory Analyses"
-      href: variables_mat_leave.html
   right:    
-    - text: "Report"
-      href: project_report.html
-    - text: "Paid Leave Dashboard"
-      href: https://meb2308.shinyapps.io/meb2308_shiny/
     - text: "Conclusions"
       href: conclusions.html
     - icon: fa-youtube fa-lg

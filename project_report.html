@@ -11,7 +11,7 @@
 
 
 
-<title>Conclusions</title>
+<title>Project Report Draft</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -399,13 +399,61 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Conclusions</h1>
+<h1 class="title toc-ignore">Project Report Draft</h1>
 
 </div>
 
 
-<div id="conclusions" class="section level2">
-<h2>Conclusions</h2>
+<style type="text/css">
+
+h1.title {
+  text-align: center;
+}
+
+</style>
+<div id="motivation" class="section level2">
+<h2>Motivation</h2>
+</div>
+<div id="questions" class="section level2">
+<h2>Questions</h2>
+<ol style="list-style-type: decimal">
+<li><p>How does length of maternity leave taken by women in New York City vary according to key socioeconomic characteristics?</p></li>
+<li><p>How does length of maternity leave differ by zip code? Do these spacial patterns match the distribution of key socioeconomic characteristics?</p></li>
+<li><p>Is the geographic distribution of average length of maternity leave associated with X, Y, X?</p></li>
+</ol>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<div id="data-sources" class="section level3">
+<h3><strong>Data Sources</strong></h3>
+<p>Our primary data source is the <a href="https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe">NYC Work and Family Leave Survey (WFLS)</a>.</p>
+<p>The NYC WFLS is a telephone survey conducted in March 2016, which was administered to 1,000 New York City residents who gave birth in 2014. The goal was to understand the availability and accessibility of paid family leave to working parents. The WLFS also sought to describe the role that paid family leave policies play in achieving health equity for parents and children.</p>
+<p>NYC zipcodes by neighborhood and borough came from the <a href="https://www.health.ny.gov/statistics/cancer/registry/appendix/neighborhoods.htm">New York State Department of Health Zipcode Definitions Page</a>.</p>
+</div>
+<div id="variables-of-interest" class="section level3">
+<h3><strong>Variables of interest</strong>*</h3>
+<p><strong>Outcomes</strong></p>
+<ul>
+<li><code>leave_weeks</code> = weeks of maternity leave (paid or unpaid)</li>
+<li><code>paid_leave_weeks</code> = weeks of paid maternity leave</li>
+<li><code>unpaid_leave_weeks</code> = weeks of unpaid maternity leave</li>
+<li><code>postpartum_check</code> = had a postpartum checkup 4-6 weeks after giving birth</li>
+</ul>
+<p><strong>Predictors</strong></p>
+<ul>
+<li><code>neighborhood</code> = neighborhood (based on five digit zip code)</li>
+<li><code>race</code> = race of survey respondent</li>
+<li><code>family_income</code> = family income as percent of the federal poverty level</li>
+<li><code>food_insecurity</code> = concern about having enough food to feed family or receives public assistance in the form of SNAP benefits / food stamps</li>
+<li><code>education</code> = highest grade or year of school completed</li>
+<li><code>partner</code> = co-parenting status (single or co-parent)</li>
+<li><code>employment_type</code> = type of employment during pregnancy (government, private company, non-profit, self-employed)</li>
+</ul>
+</div>
+<div id="data-cleaning" class="section level3">
+<h3><strong>Data Cleaning</strong></h3>
+<p>Read in data, create new variables, and select key variables for analysis</p>
+</div>
 </div>
 
 <html>
