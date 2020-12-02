@@ -8,7 +8,9 @@ navbar:
     - text: "Project Report"
       href: project_report.html
     - text: "Leaflet Maps"
-      href: leaflet_final.html  
+      href: leaflet_final.html
+    - text: "Closer Look at Data"
+      href: https://meb2308.shinyapps.io/shiny/
   right:  
     - text: "Spatial Regression and Analysis"
       href: spatial_reg_analysis.html
