@@ -10,14 +10,14 @@ output:
 
 ## Introduction {.tabset}
 
+New parents often feel they must choose between caring for their families or risking economic insecurity. It is widely believed that paid family leave policies protect the health of mothers and children, in addition to ensuring the economic security of families (Slopen, 2020). Despite the crucial role of paid family policies, the United States is the only high-income country without a national paid leave policy. In 2017, 65% of women with young children were participants in the labor force (Bureau of Labor Statistics, 2018). 
+
+
+Currently, the Federal Medical Leave Act gives eligible employees in all states the right to take up to 12 weeks of unpaid leave for pregnancy, parenting, or prenatal care. However, eligible employers must be in the private sector with 50+ employees in 20+ workweeks a  year, a public agency, or a public or private elementary or secondary school (US Department of Labor & Division, 2012). This criteria for unpaid leave creates disparities, as low income women are less likely to be covered (Slopen, 2010). 
+
+New York City is one of four states that not gives employees the right to take [paid time](https://paidfamilyleave.ny.gov) of through insurance. The other states are CA, RI, and NJ. The [2016 New York City Work and Family Leave Survey](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe) influenced the passage of New York's Paid Family Leave Law. This law gave the right to 8 weeks of job-protected leave in 2018, ten weeks in 2019 and 2020, and 12 weeks in 2021, with 60-67% of average weekly pay. 
 
 ## Project Motivation {.tabset}
-
-
-
-## What you'll find {.tabset}
-
-
 
 
 
