@@ -87,7 +87,7 @@ NYC zipcodes by neighborhood and borough came from the [New York State Departmen
 
 Read in data, create new variables, and select key variables for analysis
 
-```{r}
+```{r, include=FALSE}
 cleaned_wfls = 
   read_csv("./data/cleaned_wfls.csv")
 
@@ -110,9 +110,7 @@ merged_wfls
 
 ```{r}
 
-merged_wfls
-
-  leave=
+  leave =
   merged_wfls %>% 
   drop_na(race) %>% 
   drop_na(leave_weeks) %>% 
