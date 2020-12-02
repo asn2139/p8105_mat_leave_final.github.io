@@ -29,4 +29,21 @@ The current policies for parental leave are inadequate, perpetuating social and 
 
 The results from this analysis will be useful in better understanding the distribution of leave. We will be using data collected before New York's Paid Family Leave Law. Our results will useful for creating a baseline that future analyses can use to assess the impact of New York's Paid Family Leave Law. The results from our analysis will also be useful in understanding leave patterns in other states with disparities by geography.
 
+### References 
+Bartel, A. P., Kim, S., & Nam, J. (2019). Racial and ethnic disparities in access to and use of paid family and medical leave: evidence from four nationally representative datasets. Monthly Lab. Rev., 142, 1. 
+
+Bureau of Labor Statistics. (2018). Women in the labor force: A data- book. Retrieved from https://www.bls.gov/opub/reports/womens-databook/2017/home.htm
+
+Han, W. J., Ruhm, C., & Waldfogel, J. (2009). Parental leave policies and parents' employment and leave‐taking. Journal of Policy Analysis and Management: The Journal of the Association for Public Policy Analysis and Management, 28(1), 29-54. 
+Slopen, M. (2020). Type and Lengths of Family Leave Among New York City Women: Exploring the Composition of Paid and Unpaid Leave. Maternal and Child Health Journal, 1-10. 
+
+Slopen, M., Mulready-Ward, C., Yager, A., & Kaplan, D. (2015). Employment among pregnant women in New York City and return to work after giving birth (Epi Data Brief No. 56). Retrieved from https://www1.nyc.gov/assets/doh/downloads/pdf/epi/databrief56.pdf
+
+US Department of Labor, W., & Division, H. (2012). Fact Sheet 28: The Family and Medical Leave Act. 
+
+Hawkins, D. (2020). Disparities in the usage of maternity leave according to occupation, race/ethnicity, and education. American Journal of Industrial Medicine, 63, 1134-1144.  https://doi.org/10.1002/ajim.23188
+
+Slopen, M. (2020). Type and lengths of family leave among New York City women: Exploring the composition of paid and unpaid leave. Maternal and Child Health Journal, 24, 514-523. https://doi.org/10.1007/s10995-020-02884-9 
+
+
 

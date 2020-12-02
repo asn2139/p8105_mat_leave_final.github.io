@@ -44,7 +44,15 @@ h1.title {
 </style>
 
 
-## Dataset {.tabset}
+## Questions
+
+1. How does length of maternity leave taken by women in New York City vary according to key socioeconomic characteristics?
+
+2. How does length of maternity leave differ by zip code? Do these spacial patterns match the distribution of key socioeconomic characteristics?
+
+3. Is the geographic distribution of average length of maternity leave associated with X, Y, X?
+
+## Data {.tabset}
 
 New York City is one of four states that not gives employees the right to take [paid time](https://paidfamilyleave.ny.gov) of through insurance. The other states are CA, RI, and NJ. The [2016 New York City Work and Family Leave Survey](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe) influenced the passage of New York's Paid Family Leave Law. This law gave the right to 8 weeks of job-protected leave in 2018, ten weeks in 2019 and 2020, and 12 weeks in 2021, with 60-67% of average weekly pay. 
 
@@ -58,13 +66,7 @@ o   “The New York City Work and Family Leave Survey (WFLS), conducted in March
 [Paid Family Leave Report](https://www1.nyc.gov/assets/doh/downloads/pdf/hca/paid-family-leave-report1.pdf)
 
 
-## Questions
 
-1. How does length of maternity leave taken by women in New York City vary according to key socioeconomic characteristics?
-
-2. How does length of maternity leave differ by zip code? Do these spacial patterns match the distribution of key socioeconomic characteristics?
-
-3. Is the geographic distribution of average length of maternity leave associated with X, Y, X?
 
 ## Data 
 
@@ -115,9 +117,59 @@ write.csv(merged_wfls, "./data/merged_wfls.csv")
 merged_wfls
 ```
 
+
+## Descriptive Plots
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+NOTE: on new tab 
+
 ## Exploratory Anlaysis  
 
-### **Leave and Race**
+### Leave and Race
 
 
 ```{r}
@@ -163,7 +215,7 @@ ggplotly(unpaid)
 The visualizations illustrate that weeks of leave do not substantially differ by race. For paid and unpaid leave, mothers who identify as American Indian/AN take slightly more weeks of leave. Mothers who identify as American Indian/AN also have higher spread of length of leave. 
 
 
-### **Leave and Parenting Status**
+### Leave and Parenting Status
 ```{r}
 parent = 
   merged_wfls %>% 
@@ -182,7 +234,7 @@ ggplotly(parent)
 This visualization shows that there is not a substantial difference of length of leave between mothers who are co-parents and single parents. 
 
 
-### **Leave and Income**
+### Leave and Income
 
 ```{r}
 unpaid = 
@@ -211,7 +263,7 @@ ggplotly(unpaid)
 
 This plot shows that mothers who are food insecure are clustered towards the lower side of family income. Mothers who are food insecure tend to have a family income less than 40,000. Mothers whose family income is between 16,001 and 20,000 tend to have the shortest amount of unpaid leave. 
 
-### **Returning to Work**
+### Returning to Work
 
 ```{r}
 unemploy = 
@@ -245,7 +297,7 @@ ggplotly(unemploy2)
 
 These visualizations shed light on the reason mothers were not back at work at the time of the survey. Choosing to stay at home was the most common response. However, it was disproportionately cited by mothers who were white and mothers who had a 5 year education or higher. 
 
-### **Post Partum Check Up Status**
+### Post Partum Check Up Status
 ```{r}
 
 check = 
@@ -290,7 +342,7 @@ Across all income categories, over 90% of mothers received a postpartum check up
 
 
 
-### **Unpaid Leave and Job Type**
+### Unpaid Leave and Job Type
 ```{r}
 job_type = 
   merged_wfls %>%  
