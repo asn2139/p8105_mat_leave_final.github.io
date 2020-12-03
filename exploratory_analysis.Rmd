@@ -9,6 +9,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+We created a series of plots to understand how length of paid and unpaid family leave vary by important sociodemographic characteristics.
+
 ```{r setup, include = FALSE}
 library(tidyverse)
 library(readxl)
@@ -151,7 +153,7 @@ ggplotly(unpaid)
 
 ```
 
-This plot shows that mothers who are food insecure are clustered towards the lower side of family income. Mothers who are food insecure tend to have a family income less than 40,000. Mothers whose family income is between 16,001 and 20,000 tend to have the shortest amount of unpaid leave. 
+This plot shows that mothers who are food insecure are clustered towards the lower side of family income; mothers who are food insecure tend to have a family income less than $40,000. Mothers whose family income is between 16,001 and 20,000 tend to have the shortest amount of unpaid leave. 
 
 
 

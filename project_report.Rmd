@@ -46,21 +46,21 @@ h1.title {
 
 ## Questions
 
-Our goal is to explore the racial, economic, and geographic factors related to parental leave in New York City. Our questions are: 
+Our goal was to explore the racial, economic, and geographic factors related to parental leave in New York City. Our questions are: 
 
-1. How does length of maternity leave taken by women in New York City vary according to key socioeconomic characteristics?
+1. How does length of maternity leave taken by women in New York City vary according to key sociodemographic characteristics?
 
-2. How does length of maternity leave differ by zip code? Do these spacial patterns match the distribution of key socioeconomic characteristics?
+2. How does length of maternity leave differ by zip code? Do these spacial patterns match the distribution of key sociodemographic characteristics?
 
-3. Is the geographic distribution of average length of maternity leave associated with job type, co parent status, education, race, income, and borough? 
+3. Is the geographic distribution of average length of maternity leave associated with job type, co-parenting status, education, race, income, and/or borough? 
 
 
 
 ## Data {.tabset}
 
-Our data was taken from the New York City Work and Family Leave Survey [WFLS](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe). It was conducted in March 2016 and was a telephone survey of New York City residents who gave birth in 2014. Its goal was to improve understanding about the availability and accessibility of paid family leave to working parents. The WFLS also sought to describe the role that paid family leave policies play in achieving health equity for parents and children. Additionally, it played a role in the passage of New York's Paid Family Leave Law. A link to the Paid Family Leave Report can be found [here](https://www1.nyc.gov/assets/doh/downloads/pdf/hca/paid-family-leave-report1.pdf). 
+Our data were taken from the New York City Work and Family Leave Survey [WFLS](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe). The telephone survey was conducted in March 2016 to collect information on the availability and accessibility of paid family leave among working parents. The WFLS also sought to describe the role that paid family leave policies play in achieving health equity for parents and children. The baseline findings from this survey can be found in the [Paid Family Leave Report](https://www1.nyc.gov/assets/doh/downloads/pdf/hca/paid-family-leave-report1.pdf). 
 
-We obtained the data from the [NYC Open Data](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe). From here, we exported the data as a csv file. The raw dataset contained 1063 rows, and 153 columns. We created new variables based on the questionnaire about variables of interest. Our new variable names described the question and the responses described the responses, rather than the numeric responses in the survey questionnaire. This data was then merged with zipcode shape files of New York City.
+We obtained the data from the [NYC Open Data](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe). From here, we exported the data as a csv file. The raw dataset contained 1063 rows, and 153 columns. We created new variables based on data dictionary with descriptive names and responses, rather than the numeric responses in the original csv file. We then merged the cleaned data with a NYC zipcode shape file (available in the "maps" folder on our project GitHub.
 
 Our cleaned data consists of 1,063 rows and 20 columns. It includes information on the variables below. 
 
@@ -70,17 +70,19 @@ Our cleaned data consists of 1,063 rows and 20 columns. It includes information 
 
 **Outcomes**
 
- * `leave_weeks` = weeks of maternity leave (paid or unpaid)
+ * `leave_type` = type of maternity leave (paid, unpaid, combination of paid and unpaid, or did not take leave)
+ * `leave_weeks` = weeks of maternity leave
  * `paid_leave_weeks` = weeks of paid maternity leave 
  * `unpaid_leave_weeks` = weeks of unpaid maternity leave
  * `postpartum_check` = had a postpartum checkup 4-6 weeks after giving birth
  
 **Predictors**
 
+ * `borough` = NYC borough (based on five digit zip code)
  * `neighborhood` = neighborhood (based on five digit zip code)
  * `race` = race of survey respondent
  * `family_income` = household family income
- * `food_insecurity` = concern about having enough food to feed family or receives public assistance in the form of SNAP benefits / food stamps
+ * `food_insecurity` = was concerned about having enough food to feed one's family or self in the past 30 days or received public assistance in the form of SNAP benefits / food stamps during pregnancy or in the two years prior to the survey
  * `education` = highest level of school completed
  * `partner` = co-parenting status (single or co-parent)
  * `employment_type` = type of employment during pregnancy (government, private company, non-profit, self-employed)
@@ -104,15 +106,12 @@ merged_wfls
 ```
 
 
-
-
 ## Descriptive Analysis 
 
 We first wanted to examine the distribution of some of our key variables. This helped us better understand the sample. 
 
 
 ### Length of Leave
-
 
 ```{r}
 leave_weeks = 
@@ -162,7 +161,7 @@ merged_wfls %>%
 
 ```
 
-Figure 1 shows the spread of total leave weeks. The most common value was 12 weeks. The spread of time of leave is more likely to be under 12 weeks. Figure 2  illustrates that over 200 mothers did not take unpaid leave time. We were really interested understanding the patterns of the 447 mothers who reported taking unpaid leave. 
+Figure 1 shows the spread of total leave weeks. The most common value was 12 weeks. The spread of time of leave is more likely to be under 12 weeks. Figure 2 illustrates that over 200 mothers did not take unpaid leave time. We were particularly interested understanding the demographics and geographic clustering of the 447 mothers who reported taking unpaid leave, as doing so represents a substantial loss of income for many families.
 
 
 ### Race, Education, and Income
@@ -211,48 +210,45 @@ income
 ```
 
 
-Figure 3 illustrates that white mothers were over represented in this sample. Figure 4 illustrates that mothers with a four year college degree or higher had higher representation in this data. Lastly, Figure 5 shows that those in households of 85,000 dollars or more were most sampled. However, a limitation of this categorization is that there may be a lot of heterogeneity in the highest income category, especially in an expensive city like New York. 
+Figure 3 illustrates that white mothers were over represented in this sample. Figure 4 illustrates that mothers with a four year college degree or higher had higher representation in this data. Figure 5 shows that those in households of 85,000 dollars or more were most sampled. However, a limitation of this categorization is that there may be a lot of heterogeneity in the highest income category, especially in an expensive city like New York. 
 
 
 ## Exploratory Analysis 
 
-After getting a sense of the distribution across key variables, our exploratory analysis aimed to examine how the length of leave varied by sociodemographic characteristics We looked at paid and total length of leave by race, leave by parenting status, leave by job type, and leave by income. We also looked at reasons for unemployment across race and education. Lastly, we examined postpartum checkup status by income. You can find that analysis [here](https://asn2139.github.io/p8105_mat_leave_final.github.io/exploratory_analysis_final.html)
+After getting a sense of the distribution across key variables, our exploratory analysis aimed to examine how the length of leave varied by sociodemographic characteristics. We looked at paid and total length of leave by race, leave by parenting status, leave by job type, and leave by income. We also looked at reasons for unemployment across race and education. Lastly, we examined postpartum checkup status by income. You can find that analysis [here](https://asn2139.github.io/p8105_mat_leave_final.github.io/exploratory_analysis_final.html)
 
 
-To further understand how leave varies be sociodemographic characteristics, we created an interactive [tool](https://meb2308.shinyapps.io/shiny/). 
+To allow website visitors to see how leave varies according to neighborhood in NYC and by the sociodemographic characteristics they care about most, we created an interactive [tool](https://meb2308.shinyapps.io/shiny/). 
 
-We also wanted to incorporate geography by neighborhood. To see how sociodemographic characteristics vary by neighborhood, check out our Leaflet Map tab. 
+We also wanted to incorporate geography by neighborhood. To see how sociodemographic characteristics vary by neighborhood, see our [Leaflet Map](leaflet.html) tab. 
 
 
 ## Spatial Analysis and Regression
 
-We ran a Univariate Local Moran’s I test, looked for spatial clusters of high and low unpaid leave weeks. It looks at clusters in the same zipcode and surround zipcode as well. It also looks for places where there is low leave locally but high leave amongst the zip code’s neighbors, and vice versa. Since the Moran’s I statistic was 0.055 and had a p-value = 0.2131, we could not move forward with a spacial analysis since there were no significant spatial clusters. 
+We ran a Univariate Local Moran’s I test to look for spatial clusters of high and low unpaid leave weeks. It looks for clusters in the same zipcode and surrounding zipcodes and identifies places where length of leave is low within a zip code but high within neighboring zip codes, and vice versa. Since the Moran’s I statistic was 0.055 and had a p-value = 0.2131, we could not move forward with a spacial analysis since there were no significant spatial clusters. 
 
-After conducting this spatial analysis, we also ran a linear regression including a number of important covariates identified in our exploratory analysis. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. 
+After conducting this spatial analysis, we also ran a linear regression including a number of important covariates identified in our exploratory analyses. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. 
 
 [Shortcut](https://asn2139.github.io/p8105_mat_leave_final.github.io/spatial_reg_analysis.html)
 
 
 ## Discussion 
+  
+Our exploratory analysis did not find substantial differences of total or unpaid leave by race, parenting status, or income. However, one interesting finding from our exploratory analysis was that white mothers and mothers with a four year college degree or higher were most likely to choose to stay at home. This  highlights inequalities in maternity leave, as those who are more privileged in society were more likely to choose to stay out of the workforce. 
 
-### Results
-  
-  Our exploratory analysis did not find substantial differences of total or unpaid leave by race, parenting status, or income. This was not what we expected. However, one interesting finding from our exploratory analysis was that white mother and mothers with a four year college degree or higher were most likely to choose to stay at home. This  highlights inequalities in maternity leave, as those who are more privileged in society were more likely to choose to stay out of the workforce. Given these findings, we wanted to better understand the role geography plays in type and length of maternity leave across sociodemographic characteristics. Overall, these maps suggest that type of maternity leave, length of unpaid leave, and sociodemographic characteristics are clustered geographically in New York City. This was more in line with what we were expecting  
-  
-  We performed a spacial analysis regression to formerly test these associations. The Moran's I statistic was 0.055 and had a p-value of 0.2131, signifying that there were not significant spacial clusters. Based on these results, we could not move ahead with a spatial analysis. This was surprising and not what we expected. 
-  
-  Lastly, we ran a linear regression which included job type, co parenting status, total leave weeks, education, income, race, and borough.The only significant predictor of unpaid leave weeks was total paid leave weeks. This accounted for 64.35% of the relationship. This was also surprising, as we were expecting to see greater differences between sociodemographic groups. 
+Given these findings, we wanted to better understand the role geography plays in type and length of maternity leave across sociodemographic characteristics. Overall, these maps suggested that type of maternity leave, length of unpaid leave, and sociodemographic characteristics are clustered geographically in New York City. However a formal spacial analysis did not reveal significant spacial clusters. We then ran a linear regression model which included job type, co parenting status, total leave weeks, education, income, race, and borough. The only significant predictor of unpaid leave weeks was total paid leave weeks. This accounted for 64.35% of the relationship. This was also surprising, as we were expecting to see greater differences between sociodemographic groups. 
 
-### Limitations
-  As a whole, we were surprised with the lack of significant findings and spatial clusters. However, we think this may be attributed to the representation in the sample. 470 respondents were white while only 337 participants were non white. The way income categories were created may have also contributed to the lack of findings. The highest category for income was a family income of greater than 80,000. However, this may mask heterogeneity as the median family income in New York City in 63,799, according to the U.S. Census. Since the data was based on a phone questionnaire, it was almost exclusively categorical, masking heterogeneity. When attempting to build a predictor tool, we did not have enough data points to predict by neighborhood. Findings may have been different with a representative sample by geography and sociodemographic characteristics. 
+**Limitations**
+
+As a whole, we were surprised with the lack of significant findings and spatial clusters. We believe this may be related to the limited participation of women of racial minorities and low income groups. Among all participants, 470 were white and 337 participants were non white. In addition, many women did not provide complete information across questions, resulting in a large number of "NA" responses. The way income categories were created may also have contributed to our lack of significant findings. The highest income category was a family income of greater than 80,000, which may mask heterogeneity as the median family income in New York City is $63,799, according to the U.S. Census. 
+
+Our project concept changed throughout this process. We attempted to build a tool in Shiny to reveal the average length of leave taken by women with a series of user specified characteristics, but soon realized that we did not have enough data points to obtain this. In addition, data were missing for some neighborhoods included in the final shiny tool.
   
-  Lastly, an important limitation to note is that paternal and maternal leave are both important pieces in security economic stability within families and gender equality. We only had information on mothers. 
+Lastly, an important limitation to note is that paternal and maternal leave are both important components of economic stability within families, yet we only had information on people who identified as both women and mothers. 
 
 ### Next Steps
-  Future analyses should include a representative sample of New York City and include parents of all genders. We believe that this project will be useful for creating a baseline that future analyses can use to assess the impact of New York's Paid Family Leave Law. These results may also be useful in understanding leave patterns in other states with geographical disparities. 
-  
 
-
+We believe that this project will be useful for creating a baseline that future analyses can use to assess the impact of New York's Paid Family Leave Law. These results may also be useful in understanding leave patterns in other states with geographical disparities. 
   
 
   

@@ -71,7 +71,7 @@ race_lab= c("White", "Black/African American", "Asian", "Hispanic")
 
 job_lab= c("Government", "Private", "Non-profit", "Self-employed")
 
-ed_lab= c("No high school degree", "^", "^", "High school degree / GED", "Some college or technical school", "Four year college or higher")
+ed_lab= c("Elementary school or less", "Grade 1-8", "Grade 9-11", "High school degree / GED", "Some college or technical school", "Four year college or higher")
 
 food_lab = c("No", "Yes")
 

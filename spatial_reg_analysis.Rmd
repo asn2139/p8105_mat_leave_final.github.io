@@ -1,17 +1,21 @@
 ---
-title: "Spatial Regression & Analysis"
-output: html_document
+title: "Spatial Analysis & Regression"
+output: 
+  html_document:
+    toc: TRUE
+    toc_float: TRUE
+    code_folding: hide
 ---
+
+This page describes the steps we took to perform a spatial analysis and build a linear regression model to test the association between taking unpaid leave in NYC, borough, and sociodemographic characteristics.
 
 ## Spatial Analysis 
 
-```{r setup, include=FALSE, echo=FALSE}
+```{r setup, echo=FALSE}
 knitr::opts_knit$set(root.dir = "~/Documents/Fall2020/DataScience/p8105_maternity_leave_nyc/map")
 ```
 
-
-```{r}
-
+```{r, message = FALSE}
 library(tidyverse)
 library(spdep)
 library(maptools)
@@ -76,6 +80,7 @@ summary(unpaid.lm)
 ```{r}
 unpaid.lm %>% 
   broom::glance()
+
 lm_output = 
 unpaid.lm %>% 
   broom::tidy() %>% 
@@ -100,9 +105,9 @@ unpaid.lm %>%
     term = str_replace(term, "^Race: 3", "Race: Asian"),
     term = str_replace(term, "^Race: 8", "Race: Other")) %>% 
   knitr::kable(digits = 3)
+
+lm_output
 ```
-
-
 
 ### Residuals
 
@@ -160,9 +165,9 @@ linear_df %>%
   ggplot(aes(x = borough, y = resid)) + geom_violin()
 ```
 
+## Key Results
 
-## Results
+Because unpaid leave is likely related to income, and income is related to where a person lives, it is likely that there are spatial effects impacting rates of unpaid leave. To understand this,we ran a Univariate Local Moran's I test, which was looking for spatial clusters of high and low unpaid leave weeks. This test seeks clusters that have a high number of unpaid leave weeks within the zipcode, but also in the zipcodes surrounding it. It also looks for clusters that have low local unpaid leave weeks and low unpaid leave weeks in the zip codes surrounding it. Finally, it looks for places where there is low leave locally but high leave amongst the zip code's neighbors, and vice versa. This resulted in a Moran's I statistic of 0.055 and a p-value = 0.2131, signifying that there were not significant spatial clusters. We could not move ahead with spatial analysis due to this finding, but it is likely that spatial clustering would exist with a more representative sample of NYC. 
 
-Because unpaid leave is likely related to income, and income is related to where a person lives, it is likely that there are spatial effects impactingrates of unpaid leave. To understand this,we ran a Univariate Local Moran's I test, which was looking for spatial clusters of high and low unpaid leave weeks. This test seeks clusters that have a high number of unpaid leave weeks within the zipcode, but also in the zipcodes surrounding it. It also looks for clusters that have low local unpaid leave weeks and low unpaid leave weeks in the zip codes surrounding it. Finally, it looks for places where there is low leave locally but high leave amongst the zip code's neighbors, and vice versa. This resulted in a Moran's I statistic of 0.055 and a p-value = 0.2131, signifying that there were not significant spatial clusters. We could not move ahead with spatial analysis due to this finding, but it is likely that spatial clustering would exist with a more representative sample of NYC. 
+After conducting this spatial analysis, we also ran a linear regression including a number of important covariates identified in our exploratory analysis. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. We found an F-statistic of 6.907 with a p-value of < 0.01 on the overall regression. More specifically, we found significance among the number of weeks of total leave (p < 0.001). As weeks of total leave increases, so does the number of unpaid leave weeks. No other covariate was significant. This accounts for 64.35% of the relationship.
 
-After conducting this spatial analysis, we also ran a linear regression including a numberof important covariates identified in our exploratory analysis. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. We found an F-statistic of 6.907 with a p-value of < 0.01 on the overall regression. More specifically, we found sigificance among the number of weeks of total leave (p < 0.001). As weeks of total leave increases, so does the number of unpaid leave weeks. No other covariate was significant. This accounts for 64.35% of the relationship.

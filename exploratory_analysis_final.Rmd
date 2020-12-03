@@ -9,6 +9,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+We created a series of plots to understand how length of paid and unpaid family leave vary by important sociodemographic characteristics.
+
 ```{r setup, include = FALSE}
 library(tidyverse)
 library(readxl)
@@ -151,9 +153,7 @@ ggplotly(unpaid)
 
 ```
 
-This plot shows that mothers who are food insecure are clustered towards the lower side of family income. Mothers who are food insecure tend to have a family income less than 40,000. Mothers whose family income is between 16,001 and 20,000 tend to have the shortest amount of unpaid leave. 
-
-
+This plot shows that mothers who are food insecure are clustered towards the lower side of family income; mothers who are food insecure tend to have a family income less than $40,000. Mothers whose family income is between 16,001 and 20,000 tend to have the shortest amount of unpaid leave. 
 
 
 ### Unpaid Leave and Job Type
@@ -234,5 +234,4 @@ ggplotly(check)
 
 Across all income categories, over 90% of mothers received a postpartum check up 4-6 weeks after giving birth. Mothers with a lower family income were more likely to not get a postpartum check up.
 
-
-These visualizations suggest there were not stark differences of leave by sociodemographic characteristics. However, New York City is a very heterogeneous city, with many pockets of inequality in close proximity. We then wanted to look at leave visually across zipcode. You can find that analysis here.  
+These visualizations suggest there were not stark differences of leave by sociodemographic characteristics. However, New York City is a very heterogeneous city, with many pockets of inequality in close proximity.

@@ -7,43 +7,44 @@ output:
     toc_float: true
 ---
 
+This website uses data from the 2016 New York City Work and Family Leave Survey to explore the length and geographic distribution of family leave in New York City. Continue reading our about page to learn about the motivations for this project. Visit the [Exploratory Analyses](exploratory_analysis_final.html) and [Leaflet Maps](leaflet_final.html) pages to see visualizations of paid and unpaid leave in NYC by important social, economic, and demographic characteristics. You can explore the data used for this project yourself in [Closer Look at the Data](https://meb2308.shinyapps.io/shiny/), and learn how we tested the significance of spacial clusters in [Spacial Analysis and Regression](spacial_ref_analysis.html).
 
-## Introduction {.tabset}
+<br>
+<br>
 
-New parents often feel they must choose between caring for their families or risking economic insecurity. It is widely believed that paid family leave policies protect the health of mothers and children, in addition to ensuring the economic security of families (Slopen, 2020). Despite the crucial role of paid family policies, the United States is the only high-income country without a national paid leave policy. In 2017, 65% of women with young children were participants in the labor force (Bureau of Labor Statistics, 2018). 
+### Importance {.tabset}
+
+New parents often feel that they must choose between caring for their families or risking economic insecurity. It is widely believed that paid family leave policies protect the health of mothers and children and ensure the economic security of families (Slopen, 2020). Despite the crucial role of paid family policies, the United States is the only high-income country without a national paid leave policy. 
+
+Currently, the Federal Medical Leave Act (FMLA) gives eligible employees in all states the right to take up to 12 weeks of unpaid leave for pregnancy, parenting, or prenatal care. However, only those working for public agencies or elementary or secondary schools and those with employers in the private sector who pay 50 or more employees for 20 or more workweeks per year are eligible (US Department of Labor & Division, 2012). This criteria for unpaid leave creates disparities, as low income women are less likely to be eligible (Slopen, 2020).
+
+FMLA fails to protect women in low-wage jobs who are unable to afford any paid time off (Han et al., 2009). In 2017, 65% of women with young children were participants in the labor force (Bureau of Labor Statistics, 2018). The 2012 New York City Pregnancy Risk ASsessment Monitoring Survey found that 39% of mothers who returned to the job they held during pregnancy only received unpaid time off (Slopen et al., 2015). This can create financial hardship for families. Women with incomes below the federal poverty line were more likely to take only unpaid leave (69% vs 25% for those over 200% of the federal poverty level). This further perpetuates economic gaps in the United States. In 2015, 23% of mothers were concerned they did not have enough food to feed their families for 30 days, and food insecurity was more common among women who took only unpaid time off (Slopen et al., 2015).
+
+In addition to economic disparities, there are racial disparities in parental leave. In an analysis of four nationally representative surveys. For example, Hispanic workers had significantly lower rates of paid leave compared to White non-Hispanic workers (Bartel et al., 2019). 
 
 
-Currently, the Federal Medical Leave Act (FMLA) gives eligible employees in all states the right to take up to 12 weeks of unpaid leave for pregnancy, parenting, or prenatal care. However, eligible employers must be in the private sector with 50+ employees in 20+ workweeks a  year, a public agency, or a public or private elementary or secondary school (US Department of Labor & Division, 2012). This criteria for unpaid leave creates disparities, as low income women are less likely to be covered (Slopen, 2010). 
 
-FMLA fails to protect women in low-wage jobs who are unable to afford any paid time off (Han et al., 2009). The 2012 New York City Pregnancy Risk ASsessment Monitoring Survey found that 39% of mothers who returned to the job they held during pregnancy only recieved unpaid time off (Slopen et al., 2015). This can create financial hardship for families. Women with incomes below the federal poverty line were more likely to take only unpaid leave (69% vs 25% for those over 200% FPL). This further perpetuates the economic gap in society. 23% of mothers were concerned they did not have enough food to feed their fmailies for 30 days. These results were more common among those who took only unpaid time off (Slopen et al., 2015). 
-
-In addition to economic disparities, there are racial disparities in parental leave. In an analysis of four nationally representative surveyed, Hispanic workers had significantly lower rates of paid leave compared to White non-Hipsanic workers. There was a not a significant difference between Black non-Hispanic and White non-Hispanic workers after adjusting for education and employment status (Bartel et al., 2019). 
+Today, New York City is one of four states that gives employees the right to take paid time off through insurance. The other states are CA, RI, and NJ. The [2016 New York City Work and Family Leave Survey](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe) influenced the passage of [New York's Paid Family Leave Law](https://paidfamilyleave.ny.gov), which gave new parent the right to take up to eight weeks of job-protected leave in 2018, ten weeks in 2019 and 2020, and 12 weeks in 2021, while earning 60-67% of average weekly pay. 
 
 
-New York City is one of four states that not gives employees the right to take paid time off through insurance. The other states are CA, RI, and NJ. The [2016 New York City Work and Family Leave Survey](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe) influenced the passage of [New York's Paid Family Leave Law](https://paidfamilyleave.ny.gov). This law gave the right to 8 weeks of job-protected leave in 2018, ten weeks in 2019 and 2020, and 12 weeks in 2021, with 60-67% of average weekly pay. 
+### Project Motivation {.tabset}
+
+Current policies for parental leave in New York City and the United States as a whole are inadequate and contribute to widening social and economic disparities. Through this project, we explore racial, economic, and geographic factors related to parental leave in New York City. 
+
+The results from this analysis will be useful for understanding the distribution of leave. We will be using data collected before New York's Paid Family Leave Law in order to create a baseline that future analyses can use to assess the impact of New York's Paid Family Leave Law. The results from our analysis will also be useful in understanding leave patterns in other states with disparities by geography.
 
 
-## Project Motivation {.tabset}
+#### References {.tabset}
 
-The current policies for parental leave are inadequate, perpetuating social and economic disparities. In this project, we want to explore racial, economic, and geographic factors related to parental leave in New York City. 
-
-The results from this analysis will be useful in better understanding the distribution of leave. We will be using data collected before New York's Paid Family Leave Law. Our results will useful for creating a baseline that future analyses can use to assess the impact of New York's Paid Family Leave Law. The results from our analysis will also be useful in understanding leave patterns in other states with disparities by geography.
-
-### References 
 Bartel, A. P., Kim, S., & Nam, J. (2019). Racial and ethnic disparities in access to and use of paid family and medical leave: evidence from four nationally representative datasets. Monthly Lab. Rev., 142, 1. 
 
-Bureau of Labor Statistics. (2018). Women in the labor force: A data- book. Retrieved from https://www.bls.gov/opub/reports/womens-databook/2017/home.htm
+Bureau of Labor Statistics. (2018). Women in the labor force: A data-book. https://www.bls.gov/opub/reports/womens-databook/2017/home.htm
 
 Han, W. J., Ruhm, C., & Waldfogel, J. (2009). Parental leave policies and parents' employment and leave‐taking. Journal of Policy Analysis and Management: The Journal of the Association for Public Policy Analysis and Management, 28(1), 29-54. 
-Slopen, M. (2020). Type and Lengths of Family Leave Among New York City Women: Exploring the Composition of Paid and Unpaid Leave. Maternal and Child Health Journal, 1-10. 
 
-Slopen, M., Mulready-Ward, C., Yager, A., & Kaplan, D. (2015). Employment among pregnant women in New York City and return to work after giving birth (Epi Data Brief No. 56). Retrieved from https://www1.nyc.gov/assets/doh/downloads/pdf/epi/databrief56.pdf
+Slopen, M. (2020). Type and lengths of family leave among New York City women: Exploring the composition of paid and unpaid leave. Maternal and Child Health Journal, 24, 514-523.
 
-US Department of Labor, W., & Division, H. (2012). Fact Sheet 28: The Family and Medical Leave Act. 
+Slopen, M., Mulready-Ward, C., Yager, A., & Kaplan, D. (2015). Employment among pregnant women in New York City and return to work after giving birth (Epi Data Brief No. 56).
 
-Hawkins, D. (2020). Disparities in the usage of maternity leave according to occupation, race/ethnicity, and education. American Journal of Industrial Medicine, 63, 1134-1144.  https://doi.org/10.1002/ajim.23188
-
-Slopen, M. (2020). Type and lengths of family leave among New York City women: Exploring the composition of paid and unpaid leave. Maternal and Child Health Journal, 24, 514-523. https://doi.org/10.1007/s10995-020-02884-9 
-
-
+US Department of Labor, W., & Division, H. (2012). Fact Sheet 28: The Family and Medical Leave Act. https://www.dol.gov/sites/dolgov/files/WHD/legacy/files/whdfs28.pdf 
 
