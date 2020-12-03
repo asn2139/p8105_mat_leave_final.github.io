@@ -107,10 +107,6 @@ merged_wfls
 
 
 
-As this will be your only chance to describe your project in detail, make sure that your report is a standalone document that fully describes your process and results. 
-justify steps you took. major changes to ideas 
-
-
 
 ### Exploratory Analysis 
 
@@ -140,6 +136,16 @@ merged_wfls %>%
     y = "Count") 
 
 leave_weeks
+
+
+merged_wfls %>% 
+  drop_na(leave_weeks) %>% 
+  group_by(leave_weeks) %>% 
+  summarize(
+    n_obs = n()
+  ) %>% 
+   knitr::kable(digits = 1)
+  
 ```
 
 
@@ -156,6 +162,14 @@ merged_wfls %>%
 
 unpaid_leave_weeks
 
+merged_wfls %>% 
+  drop_na(unpaid_leave_weeks) %>% 
+  group_by(unpaid_leave_weeks) %>% 
+  summarize(
+    n_obs = n()
+  ) %>% 
+   knitr::kable(digits = 1)
+
 ```
 
 Figure 1 shows the spread of total leave weeks. The most common value was 12 weeks. The spread of time of leave is more likely to be under 12 weeks. Figure 2  illustrates that over 200 mothers did not take unpaid leave time. We were really interested understanding the patterns of the 447 mothers who reported taking unpaid leave. 
@@ -166,7 +180,7 @@ Figure 1 shows the spread of total leave weeks. The most common value was 12 wee
 race = 
 merged_wfls %>% 
   drop_na(race) %>% 
-  ggplot(aes(x = race)) + geom_bar() + 
+  ggplot(aes(x = race, fill = race)) + geom_bar() + 
   theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
   labs(
     title = "Fig 3. Distribution of Race",
@@ -181,7 +195,7 @@ education =
 merged_wfls %>% 
   drop_na(education) %>% 
    mutate(education = fct_reorder(education, d7)) %>% 
-  ggplot(aes(x = education)) + geom_bar() + 
+  ggplot(aes(x = education, fill = education)) + geom_bar() + 
   theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
   labs(
     title = "Fig 4. Distribution of education",
@@ -194,9 +208,9 @@ education
 
 ```{r}
 income = 
-merged_wfls %>% 
+  merged_wfls %>% 
   drop_na(family_income) %>% 
-  ggplot(aes(x = family_income)) + geom_bar() + 
+  ggplot(aes(x = family_income, fill = family_income)) + geom_bar() + 
   theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
   labs(
     title = "Fig 5. Distribution of income",
