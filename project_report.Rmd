@@ -114,11 +114,11 @@ justify steps you took. major changes to ideas
 
 ### Exploratory Analysis 
 
-[Link:](https://asn2139.github.io/p8105_mat_leave_final.github.io/exploratory_analysis_final.html)
+[Shortcut](https://asn2139.github.io/p8105_mat_leave_final.github.io/exploratory_analysis_final.html)
 
 ### Closer Look at Data
 
-[Link:](https://meb2308.shinyapps.io/shiny/)
+[Shortcut](https://meb2308.shinyapps.io/shiny/)
 
 ### Descriptive Analysis 
 
@@ -221,7 +221,7 @@ We ran a Univariate Local Moran’s I test, looked for spatial clusters of high 
 
 After conducting this spatial analysis, we also ran a linear regression including a number of important covariates identified in our exploratory analysis. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. 
 
-[Link:](https://asn2139.github.io/p8105_mat_leave_final.github.io/spatial_reg_analysis.html)
+[Shortcut](https://asn2139.github.io/p8105_mat_leave_final.github.io/spatial_reg_analysis.html)
 
 
 ## Discussion 
