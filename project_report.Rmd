@@ -112,8 +112,13 @@ justify steps you took. major changes to ideas
 
 
 
-## Exploratory Analysis 
+### Exploratory Analysis 
 
+[Link:](https://asn2139.github.io/p8105_mat_leave_final.github.io/exploratory_analysis_final.html)
+
+### Closer Look at Data
+
+[Link:](https://meb2308.shinyapps.io/shiny/)
 
 ### Descriptive Analysis 
 
@@ -210,12 +215,13 @@ After getting a sense of the distribution across key variables, our exploratory 
 * NOTE: about maps. about shiny  
 
 
-
 ## Spatial Analysis and Regression
+
 We ran a Univariate Local Moran’s I test, looked for spatial clusters of high and low unpaid leave weeks. It looks at clusters in the same zipcode and surround zipcode as well. It also looks for places where there is low leave locally but high leave amongst the zip code’s neighbors, and vice versa. Since the Moran’s I statistic was 0.055 and had a p-value = 0.2131, we could not move forward with a spacial analysis since there were no significant spatial clusters. 
 
 After conducting this spatial analysis, we also ran a linear regression including a number of important covariates identified in our exploratory analysis. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. 
 
+[Link:](https://asn2139.github.io/p8105_mat_leave_final.github.io/spatial_reg_analysis.html)
 
 
 ## Discussion 
