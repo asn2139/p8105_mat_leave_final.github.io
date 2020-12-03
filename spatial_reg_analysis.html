@@ -286,7 +286,7 @@ $(document).ready(function () {
   <a href="about.html">About</a>
 </li>
 <li>
-  <a href="exploratory_analysis.html">Exploratory Analysis</a>
+  <a href="exploratory_analysis_final.html">Exploratory Analysis</a>
 </li>
 <li>
   <a href="leaflet_final.html">Leaflet Maps</a>
@@ -330,134 +330,12 @@ $(document).ready(function () {
 
 <div id="spatial-analysis" class="section level2">
 <h2>Spatial Analysis</h2>
-<pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
-<pre><code>## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-## ✓ tibble  3.0.3     ✓ dplyr   1.0.2
-## ✓ tidyr   1.1.2     ✓ stringr 1.4.0
-## ✓ readr   1.4.0     ✓ forcats 0.5.0</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## x dplyr::filter() masks stats::filter()
-## x dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(spdep)</code></pre>
-<pre><code>## Loading required package: sp</code></pre>
-<pre><code>## Loading required package: spData</code></pre>
-<pre><code>## To access larger datasets in this package, install the spDataLarge
-## package with: `install.packages(&#39;spDataLarge&#39;,
-## repos=&#39;https://nowosad.github.io/drat/&#39;, type=&#39;source&#39;)`</code></pre>
-<pre><code>## Loading required package: sf</code></pre>
-<pre><code>## Linking to GEOS 3.8.1, GDAL 3.1.1, PROJ 6.3.1</code></pre>
-<pre class="r"><code>library(maptools)</code></pre>
-<pre><code>## Checking rgeos availability: FALSE
-##      Note: when rgeos is not available, polygon geometry     computations in maptools depend on gpclib,
-##      which has a restricted licence. It is disabled by default;
-##      to enable gpclib, type gpclibPermit()</code></pre>
-<pre class="r"><code>library(rgdal)</code></pre>
-<pre><code>## rgdal: version: 1.5-18, (SVN revision 1082)
-## Geospatial Data Abstraction Library extensions to R successfully loaded
-## Loaded GDAL runtime: GDAL 3.1.1, released 2020/06/22
-## Path to GDAL shared files: /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rgdal/gdal
-## GDAL binary built with GEOS: TRUE 
-## Loaded PROJ runtime: Rel. 6.3.1, February 10th, 2020, [PJ_VERSION: 631]
-## Path to PROJ shared files: /Library/Frameworks/R.framework/Versions/4.0/Resources/library/rgdal/proj
-## Linking to sp version:1.4-4
-## To mute warnings of possible GDAL/OSR exportToProj4() degradation,
-## use options(&quot;rgdal_show_exportToProj4_warnings&quot;=&quot;none&quot;) before loading rgdal.</code></pre>
-<pre class="r"><code>library(spatialreg)</code></pre>
-<pre><code>## Loading required package: Matrix</code></pre>
-<pre><code>## 
-## Attaching package: &#39;Matrix&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:tidyr&#39;:
-## 
-##     expand, pack, unpack</code></pre>
-<pre><code>## Registered S3 methods overwritten by &#39;spatialreg&#39;:
-##   method                   from 
-##   residuals.stsls          spdep
-##   deviance.stsls           spdep
-##   coef.stsls               spdep
-##   print.stsls              spdep
-##   summary.stsls            spdep
-##   print.summary.stsls      spdep
-##   residuals.gmsar          spdep
-##   deviance.gmsar           spdep
-##   coef.gmsar               spdep
-##   fitted.gmsar             spdep
-##   print.gmsar              spdep
-##   summary.gmsar            spdep
-##   print.summary.gmsar      spdep
-##   print.lagmess            spdep
-##   summary.lagmess          spdep
-##   print.summary.lagmess    spdep
-##   residuals.lagmess        spdep
-##   deviance.lagmess         spdep
-##   coef.lagmess             spdep
-##   fitted.lagmess           spdep
-##   logLik.lagmess           spdep
-##   fitted.SFResult          spdep
-##   print.SFResult           spdep
-##   fitted.ME_res            spdep
-##   print.ME_res             spdep
-##   print.lagImpact          spdep
-##   plot.lagImpact           spdep
-##   summary.lagImpact        spdep
-##   HPDinterval.lagImpact    spdep
-##   print.summary.lagImpact  spdep
-##   print.sarlm              spdep
-##   summary.sarlm            spdep
-##   residuals.sarlm          spdep
-##   deviance.sarlm           spdep
-##   coef.sarlm               spdep
-##   vcov.sarlm               spdep
-##   fitted.sarlm             spdep
-##   logLik.sarlm             spdep
-##   anova.sarlm              spdep
-##   predict.sarlm            spdep
-##   print.summary.sarlm      spdep
-##   print.sarlm.pred         spdep
-##   as.data.frame.sarlm.pred spdep
-##   residuals.spautolm       spdep
-##   deviance.spautolm        spdep
-##   coef.spautolm            spdep
-##   fitted.spautolm          spdep
-##   print.spautolm           spdep
-##   summary.spautolm         spdep
-##   logLik.spautolm          spdep
-##   print.summary.spautolm   spdep
-##   print.WXImpact           spdep
-##   summary.WXImpact         spdep
-##   print.summary.WXImpact   spdep
-##   predict.SLX              spdep</code></pre>
-<pre><code>## 
-## Attaching package: &#39;spatialreg&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:spdep&#39;:
-## 
-##     anova.sarlm, as_dgRMatrix_listw, as_dsCMatrix_I, as_dsCMatrix_IrW,
-##     as_dsTMatrix_listw, as.spam.listw, bptest.sarlm, can.be.simmed,
-##     cheb_setup, coef.gmsar, coef.sarlm, coef.spautolm, coef.stsls,
-##     create_WX, deviance.gmsar, deviance.sarlm, deviance.spautolm,
-##     deviance.stsls, do_ldet, eigen_pre_setup, eigen_setup, eigenw,
-##     errorsarlm, fitted.gmsar, fitted.ME_res, fitted.sarlm,
-##     fitted.SFResult, fitted.spautolm, get.ClusterOption,
-##     get.coresOption, get.mcOption, get.VerboseOption,
-##     get.ZeroPolicyOption, GMargminImage, GMerrorsar, griffith_sone,
-##     gstsls, Hausman.test, HPDinterval.lagImpact, impacts, intImpacts,
-##     Jacobian_W, jacobianSetup, l_max, lagmess, lagsarlm, lextrB,
-##     lextrS, lextrW, lmSLX, logLik.sarlm, logLik.spautolm, LR.sarlm,
-##     LR1.sarlm, LR1.spautolm, LU_prepermutate_setup, LU_setup,
-##     Matrix_J_setup, Matrix_setup, mcdet_setup, MCMCsamp, ME, mom_calc,
-##     mom_calc_int2, moments_setup, powerWeights, predict.sarlm,
-##     predict.SLX, print.gmsar, print.ME_res, print.sarlm,
-##     print.sarlm.pred, print.SFResult, print.spautolm, print.stsls,
-##     print.summary.gmsar, print.summary.sarlm, print.summary.spautolm,
-##     print.summary.stsls, residuals.gmsar, residuals.sarlm,
-##     residuals.spautolm, residuals.stsls, sacsarlm, SE_classic_setup,
-##     SE_interp_setup, SE_whichMin_setup, set.ClusterOption,
-##     set.coresOption, set.mcOption, set.VerboseOption,
-##     set.ZeroPolicyOption, similar.listw, spam_setup, spam_update_setup,
-##     SpatialFiltering, spautolm, spBreg_err, spBreg_lag, spBreg_sac,
-##     stsls, subgraph_eigenw, summary.gmsar, summary.sarlm,
-##     summary.spautolm, summary.stsls, trW, vcov.sarlm, Wald1.sarlm</code></pre>
-<pre class="r"><code>library(sf)
+<pre class="r"><code>library(tidyverse)
+library(spdep)
+library(maptools)
+library(rgdal)
+library(spatialreg)
+library(sf)
 unpaid_poly &lt;- readOGR(dsn = &quot;nyc_only_zips.shp&quot;, layer = &quot;nyc_only_zips&quot;)</code></pre>
 <pre><code>## OGR data source with driver: ESRI Shapefile 
 ## Source: &quot;/Users/akanksha/Documents/Fall2020/DataScience/p8105_maternity_leave_nyc/map/nyc_only_zips.shp&quot;, layer: &quot;nyc_only_zips&quot;
@@ -696,25 +574,10 @@ unpaid.lm %&gt;%
 <h3>Residuals</h3>
 <pre class="r"><code>library(tidyverse)
 library(readxl)
-library(plotly)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;plotly&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:ggplot2&#39;:
-## 
-##     last_plot</code></pre>
-<pre><code>## The following object is masked from &#39;package:stats&#39;:
-## 
-##     filter</code></pre>
-<pre><code>## The following object is masked from &#39;package:graphics&#39;:
-## 
-##     layout</code></pre>
-<pre class="r"><code>library(janitor)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;janitor&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     chisq.test, fisher.test</code></pre>
-<pre class="r"><code>cleaned_wfls = 
+library(plotly)
+library(janitor)
+
+cleaned_wfls = 
   read_csv(&quot;~/Documents/Fall2020/DataScience/p8105_mat_leave_final.github.io/data/cleaned_wfls.csv&quot;)</code></pre>
 <pre><code>## Warning: Missing column names filled in: &#39;X1&#39; [1]</code></pre>
 <pre><code>## 
