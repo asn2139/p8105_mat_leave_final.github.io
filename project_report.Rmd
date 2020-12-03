@@ -223,6 +223,7 @@ After conducting this spatial analysis, we also ran a linear regression includin
 
 [Shortcut](https://asn2139.github.io/p8105_mat_leave_final.github.io/spatial_reg_analysis.html)
 
+## Interesting Challenges
 
 ## Discussion 
 
