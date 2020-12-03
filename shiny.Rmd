@@ -20,7 +20,7 @@ library(dplyr)
 library(leaflet)
 library(sp)
 
-rsconnect::deployApp("./shiny.Rmd")
+#rsconnect::deployApp("./shiny.Rmd")
 
 #read in data frame for leave plots
 charts_df = 
