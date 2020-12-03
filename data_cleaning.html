@@ -25,6 +25,15 @@
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      </style>
+
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
   pre:not([class]) {
@@ -277,7 +286,7 @@ $(document).ready(function () {
   <a href="about.html">About</a>
 </li>
 <li>
-  <a href="project_report.html">Project Report</a>
+  <a href="exploratory_analysis_final.html">Exploratory Analysis</a>
 </li>
 <li>
   <a href="leaflet_final.html">Leaflet Maps</a>
@@ -285,13 +294,13 @@ $(document).ready(function () {
 <li>
   <a href="https://meb2308.shinyapps.io/shiny/">Closer Look at Data</a>
 </li>
+<li>
+  <a href="spatial_reg_analysis.html">Spatial Analysis and Regression</a>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="spatial_reg_analysis.html">Spatial Regression and Analysis</a>
-</li>
-<li>
-  <a href="conclusions.html">Conclusions</a>
+  <a href="project_report.html">Project Report</a>
 </li>
 <li>
   <a href="https://www.youtube.com/watch?v=ahPeclU9VW0">
@@ -406,7 +415,7 @@ $(document).ready(function () {
       zipcode = fixd2) %&gt;% 
   select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;: &quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;d4_2&quot;, &quot;unemploy_reason&quot;, &quot;bf1_1&quot;, &quot;d7&quot;, &quot;d4_1&quot;, &quot;cp1&quot;, &quot;el3&quot;)
 
-wfls_df=
+wfls_df =
 wfls_df %&gt;% 
   mutate(
     race_num = race,
@@ -414,9 +423,9 @@ wfls_df %&gt;%
       pph1 == &#39;1&#39; ~ &quot;yes&quot;, 
       pph1 == &#39;2&#39; ~ &quot;no&quot;), 
     mean_leave_weeks = mean(leave_weeks)) %&gt;% 
-  select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;: &quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;postpartum_check&quot;) %&gt;% 
-  select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;:&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;postpartum_check&quot;) %&gt;% 
-  select(&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;zipcode&quot;,&quot;postpartum_check&quot;)</code></pre>
+  select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;: &quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;postpartum_check&quot;, &quot;d7&quot;) %&gt;% 
+  select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;:&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;postpartum_check&quot;, &quot;d7&quot;) %&gt;% 
+  select(&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;zipcode&quot;,&quot;postpartum_check&quot;, &quot;d7&quot;)</code></pre>
 <p>Save cleaned data set and merge with NYC zipcodes data</p>
 <pre class="r"><code>write.csv(wfls_df, &quot;./data/cleaned_wfls.csv&quot;)</code></pre>
 <p>Merge Datasets</p>

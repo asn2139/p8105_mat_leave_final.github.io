@@ -5,17 +5,17 @@ navbar:
   left:
     - text: "About"
       href: about.html
-    - text: "Project Report"
-      href: project_report.html
+    - text: "Exploratory Analysis"
+      href: exploratory_analysis_final.html
     - text: "Leaflet Maps"
       href: leaflet_final.html
     - text: "Closer Look at Data"
       href: https://meb2308.shinyapps.io/shiny/
-  right:  
-    - text: "Spatial Regression and Analysis"
+    - text: "Spatial Analysis and Regression"
       href: spatial_reg_analysis.html
-    - text: "Conclusions"
-      href: conclusions.html
+  right:  
+    - text: "Project Report"
+      href: project_report.html
     - icon: fa-youtube fa-lg
       href: https://www.youtube.com/watch?v=ahPeclU9VW0
     - icon: fa-github fa-lg
