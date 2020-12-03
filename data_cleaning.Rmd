@@ -116,7 +116,7 @@ wfls_df =
       zipcode = fixd2) %>% 
   select("ph1":"el1", "el9", "el11", "el13a":"el17f", "ih1", "mh4", "es1a": "es3", "SAMP_WEIGHT", "POP_WEIGHT", "leave_type":"pct_unpaid", "partner":"zipcode", "d4_2", "unemploy_reason", "bf1_1", "d7", "d4_1", "cp1", "el3")
 
-wfls_df=
+wfls_df =
 wfls_df %>% 
   mutate(
     race_num = race,
@@ -124,9 +124,9 @@ wfls_df %>%
       pph1 == '1' ~ "yes", 
       pph1 == '2' ~ "no"), 
     mean_leave_weeks = mean(leave_weeks)) %>% 
-  select("ph1":"el1", "el9", "el11", "el13a":"el17f", "ih1", "mh4", "es1a": "es3", "SAMP_WEIGHT", "POP_WEIGHT", "leave_type":"pct_unpaid", "partner":"zipcode", "postpartum_check") %>% 
-  select("ph1":"el1", "el9", "el11", "el13a":"el17f", "ih1", "mh4", "es1a":"es3", "SAMP_WEIGHT", "POP_WEIGHT", "leave_type":"pct_unpaid", "partner":"zipcode", "postpartum_check") %>% 
-  select("es3", "SAMP_WEIGHT", "POP_WEIGHT", "leave_type":"zipcode","postpartum_check")
+  select("ph1":"el1", "el9", "el11", "el13a":"el17f", "ih1", "mh4", "es1a": "es3", "SAMP_WEIGHT", "POP_WEIGHT", "leave_type":"pct_unpaid", "partner":"zipcode", "postpartum_check", "d7") %>% 
+  select("ph1":"el1", "el9", "el11", "el13a":"el17f", "ih1", "mh4", "es1a":"es3", "SAMP_WEIGHT", "POP_WEIGHT", "leave_type":"pct_unpaid", "partner":"zipcode", "postpartum_check", "d7") %>% 
+  select("es3", "SAMP_WEIGHT", "POP_WEIGHT", "leave_type":"zipcode","postpartum_check", "d7")
 
 ```
 

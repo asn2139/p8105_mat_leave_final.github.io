@@ -43,8 +43,6 @@ h1.title {
 
 </style>
 
-## Motivation
-
 
 ## Questions
 
@@ -52,17 +50,21 @@ h1.title {
 
 2. How does length of maternity leave differ by zip code? Do these spacial patterns match the distribution of key socioeconomic characteristics?
 
-3. Is the geographic distribution of average length of maternity leave associated with X, Y, X?
+3. Is the geographic distribution of average length of maternity leave associated with job type, co parent status, education, race, income, and borough? 
 
-## Data 
 
-### **Data Sources**
 
-Our primary data source is the [NYC Work and Family Leave Survey (WFLS)](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe).
+## Data {.tabset}
 
-The NYC WFLS is a telephone survey conducted in March 2016, which was administered to 1,000 New York City residents who gave birth in 2014. The goal was to understand the availability and accessibility of paid family leave to working parents. The WLFS also sought to describe the role that paid family leave policies play in achieving health equity for parents and children.
+Our data was taken from the New York City Work and Family Leave Survey [WFLS](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe). It was conducted in March 2016 and was a telephone survey of New York City residents who gave birth in 2014. Its goal was to improve understanding about the availability and accessibility of paid family leave to working parents. The WFLS also sought to describe the role that paid family leave policies play in achieving health equity for parents and children. Additionally, it played a role in the passage of New York's Paid Family Leave Law. A link to the Paid Family Leave Report can be found [here](https://www1.nyc.gov/assets/doh/downloads/pdf/hca/paid-family-leave-report1.pdf). 
 
-NYC zipcodes by neighborhood and borough came from the [New York State Department of Health Zipcode Definitions Page](https://www.health.ny.gov/statistics/cancer/registry/appendix/neighborhoods.htm).
+We obtained the data from the [NYC Open Data](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe). From here, we exported the data as a csv file. The raw dataset contained 1063 rows, and 153 columns. We created new variables based on the questionnaire about variables of interest. Our new variable names described the question and the responses described the responses, rather than the numeric responses in the survey questionnaire. his data was then merged with zipcode shape files of New York City.
+
+Our cleaned data consists of 1,063 rows and 20 columns. It includes information on the variables below. 
+
+*Note: How did we make our outcome? 
+* NOTE: add something about shape data files. where obtained, how was it cleaned? 
+
 
 ### **Variables of interest***
 
@@ -83,11 +85,10 @@ NYC zipcodes by neighborhood and borough came from the [New York State Departmen
  * `partner` = co-parenting status (single or co-parent)
  * `employment_type` = type of employment during pregnancy (government, private company, non-profit, self-employed)
 
-### **Data Cleaning**
 
-Read in data, create new variables, and select key variables for analysis
+*NOTE: does this need to be here? 
 
-```{r}
+```{r, include=FALSE}
 cleaned_wfls = 
   read_csv("./data/cleaned_wfls.csv")
 
@@ -103,16 +104,148 @@ write.csv(merged_wfls, "./data/merged_wfls.csv")
 merged_wfls
 ```
 
+
+
+
+As this will be your only chance to describe your project in detail, make sure that your report is a standalone document that fully describes your process and results. 
+justify steps you took. major changes to ideas 
+
+
+
+## Exploratory Analysis 
+
+
+### Descriptive Analysis 
+
+We first wanted to examine the distribution of some of our key variables. This helped us better understand the sample. 
+
+
+#### Length of Leave
+
+
+```{r}
+leave_weeks = 
+merged_wfls %>% 
+  drop_na(leave_weeks) %>% 
+  ggplot(aes(x = leave_weeks)) + geom_bar() + 
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
+  labs(
+    title = "Fig 1. Leave weeks",
+    x = "Number of Weeks",
+    y = "Count") 
+
+leave_weeks
+```
+
+
+```{r}
+unpaid_leave_weeks = 
+merged_wfls %>% 
+  drop_na(unpaid_leave_weeks) %>% 
+  ggplot(aes(x = unpaid_leave_weeks)) + geom_bar() + 
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
+  labs(
+    title = "Fig 2. Unpaid leave weeks",
+    x = "Number of Weeks",
+    y = "Count") 
+
+unpaid_leave_weeks
+
+```
+
+Figure 1 shows the spread of total leave weeks. The most common value was 12 weeks. The spread of time of leave is more likely to be under 12 weeks. Figure 2  illustrates that over 200 mothers did not take unpaid leave time. We were really interested understanding the patterns of the 447 mothers who reported taking unpaid leave. 
+
+
+#### Race, Education, and Income
+```{r}
+race = 
+merged_wfls %>% 
+  drop_na(race) %>% 
+  ggplot(aes(x = race)) + geom_bar() + 
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
+  labs(
+    title = "Fig 3. Distribution of Race",
+    x = "Self identified race",
+    y = "Count") 
+
+race
+```
+
+```{r}
+education = 
+merged_wfls %>% 
+  drop_na(education) %>% 
+   mutate(education = fct_reorder(education, d7)) %>% 
+  ggplot(aes(x = education)) + geom_bar() + 
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
+  labs(
+    title = "Fig 4. Distribution of education",
+    x = "education level",
+    y = "Count") 
+
+education
+```
+
+
+```{r}
+income = 
+merged_wfls %>% 
+  drop_na(family_income) %>% 
+  ggplot(aes(x = family_income)) + geom_bar() + 
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
+  labs(
+    title = "Fig 5. Distribution of income",
+    x = "income level",
+    y = "Count") 
+
+income
+```
+
+
+Figure 3 illustrates that white mothers were over represented in this sample. Figure 4 illustrates that mothers with a four year college degree or higher had higher representation in this data. Lastly, Figure 5 shows that those in households of 85,000 dollars or more were most sampled. However, a limitation of this categorization is that there may be a lot of heterogeneity in the highest income category, especially in an expensive city like New York. 
+
+
+After getting a sense of the distribution across key variables, our exploratory analysis aimed to examine how the length of leave varied by sociodemographic information. We looked at paid and total length of leave by race, leave by parenting status, leave by job type, and leave by income. We also looked at reasons for unemployment across race and education. Lastly, we examined postpartum checkup status by income. You can find that analysis here. 
+
+* NOTE: about maps. about shiny  
+
+
+
+## Spatial Regression and Analysis 
+We ran a Univariate Local Moran’s I test, looked for spatial clusters of high and low unpaid leave weeks. It looks at clusters in the same zipcode and surround zipcode as well. It also looks for places where there is low leave locally but high leave amongst the zip code’s neighbors, and vice versa. Since the Moran’s I statistic was 0.055 and had a p-value = 0.2131, we could not move forward with a spacial analysis since there were no significant spatial clusters. 
+
+After conducting this spatial analysis, we also ran a linear regression including a number of important covariates identified in our exploratory analysis. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. 
+
+
+
+## Discussion 
+
+  Our exploratory analysis did not find substantial differences of total or unpaid leave by race, parenting status, or income. This was not what we expected. However, one interesting finding from our exploratory analysis was that white mother and mothers with a four year college degree or higher were most likely to choose to stay at home. This  highlights inequalities in maternity leave, as those who are more privileged in society were more likely to choose to stay out of the workforce. Given these findings, we wanted to better understand the role geography plays in type and length of maternity leave across sociodemographic characteristics. Overall, these maps suggest that type of maternity leave, length of unpaid leave, and sociodemographic characteristics are clustered geographically in New York City. This was more in line with what we were expecting  
+  
+  We performed a spacial analysis regression to formerly test these associations. The Moran's I statistic was 0.055 and had a p-value of 0.2131, signifying that there were not significant spacial clusters. Based on these results, we could not move ahead with a spatial analysis. This was surprising and not what we expected. 
+  
+  Lastly, we ran a linear regression which included job type, co parenting status, total leave weeks, education, income, race, and borough.The only significant predictor of unpaid leave weeks was total paid leave weeks. This accounted for 64.35% of the relationship. This was also surprising, as we were expecting to see greater differences between sociodemographic groups. 
+  
+  As a whole, we were surprised with the lack of significant findings and spatial clusters. However, we think this may be attributed to the representation in the sample. 470 respondents were white while only 337 participants were non white. The way income categories were created may have also contributed to the lack of findings. The highest category for income was a family income of greater than 80,000. However, this may mask heterogeneity as the median family income in New York City in 63,799, according to the U.S. Census. Since the data was based on a phone questionnaire, it was almost exclusively categorical, masking heterogeneity. When attempting to build a predictor tool, we did not have enough data points to predict by neighborhood. Findings may have been different with a representative sample by geography and sociodemographic characteristics. 
+  
+  Lastly, an important limitaiton to note is that paternal and maternal leave are both important pieces in security economic stability within families and gender equality. We only had information on mothers. Future analyses should include a representative sample of New York City and include parents of all genders. 
+  
+
+Note: Take out conclusion tab 
+
+
+
+
+**NOTE: on new tab**
+
 ## Exploratory Anlaysis  
 
-### **Leave and Race**
+### Leave and Race
 
 
 ```{r}
 
-merged_wfls
-
-  leave=
+  leave =
   merged_wfls %>% 
   drop_na(race) %>% 
   drop_na(leave_weeks) %>% 
@@ -153,7 +286,7 @@ ggplotly(unpaid)
 The visualizations illustrate that weeks of leave do not substantially differ by race. For paid and unpaid leave, mothers who identify as American Indian/AN take slightly more weeks of leave. Mothers who identify as American Indian/AN also have higher spread of length of leave. 
 
 
-### **Leave and Parenting Status**
+### Leave and Parenting Status
 ```{r}
 parent = 
   merged_wfls %>% 
@@ -172,7 +305,7 @@ ggplotly(parent)
 This visualization shows that there is not a substantial difference of length of leave between mothers who are co-parents and single parents. 
 
 
-### **Leave and Income**
+### Leave and Income
 
 ```{r}
 unpaid = 
@@ -201,7 +334,30 @@ ggplotly(unpaid)
 
 This plot shows that mothers who are food insecure are clustered towards the lower side of family income. Mothers who are food insecure tend to have a family income less than 40,000. Mothers whose family income is between 16,001 and 20,000 tend to have the shortest amount of unpaid leave. 
 
-### **Returning to Work**
+
+
+
+### Unpaid Leave and Job Type
+```{r}
+job_type = 
+  merged_wfls %>%  
+  drop_na(job_type) %>% 
+  drop_na(unpaid_leave_weeks) %>% 
+  ggplot(aes(x = job_type, y = unpaid_leave_weeks, fill = job_type, alpha = 0.9)) + 
+  geom_boxplot() + 
+  ylim(0, 50) + 
+  labs(
+    title = "Unpaid Leave Weeks by Job Type",
+    x = "Job type",
+    y = "Unpaid Leave Weeks") + 
+  theme(legend.position = "none")
+
+ggplotly(job_type)
+```
+
+This visualization shows that mothers who were self-employed were slightly more likely to have longer unpaid leave weeks. However, these values did not value substantially across groups. 
+
+### Returning to Work
 
 ```{r}
 unemploy = 
@@ -222,6 +378,8 @@ ggplotly(unemploy)
 unemploy2 = 
 merged_wfls %>% 
   drop_na(unemploy_reason) %>% 
+  drop_na(education) %>% 
+   mutate(education = fct_reorder(education, d7)) %>% 
   ggplot(aes(y = unemploy_reason, fill = education)) + geom_bar(position = "dodge") + 
   theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
   labs(
@@ -233,28 +391,9 @@ ggplotly(unemploy2)
 ```
 
 
-These visualizations shed light on the reason mothers were not back at work at the time of the survey. Choosing to stay at home was the most common response. However, it was disproportionately cited by mothers who were white and mothers who had a 5 year education or higher. 
+These visualizations shed light on the reason mothers were not back at work at the time of the survey. Choosing to stay at home was the most common response. However, it was disproportionately cited by mothers who were white and mothers who had a 4 year education or higher. 
 
-### **Post Partum Check Up Status**
-```{r}
-
-check = 
-merged_wfls %>% 
-  drop_na(family_income) %>% 
-  drop_na(postpartum_check) %>% 
-  mutate(
-    family_income = fct_reorder(family_income, es3)) %>% 
-  ggplot(aes(x = postpartum_check, fill = family_income)) + geom_bar(position = "dodge") + 
-  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
-  labs(
-    title = "Postpartum Check",
-    x = "Postpartum Check status",
-    y = "Count") 
-
-ggplotly(check)
-
-
-```
+### Post Partum Check Up Status
 
 ```{r}
 check = 
@@ -274,30 +413,8 @@ merged_wfls %>%
 ggplotly(check)
 ```
 
-note: made proportion but looked like last hw and wasn't exciting b/c all well over .9
-
-Across all income categories, over 90% of mothers received a postpartum check up 4-6 weeks after giving birth. Mothers with a lower family income were more likely to not get a postpartum check up. 
+Across all income categories, over 90% of mothers received a postpartum check up 4-6 weeks after giving birth. Mothers with a lower family income were more likely to not get a postpartum check up.
 
 
+These visualizations suggest there were not stark differences of leave by sociodemographic characteristics. However, New York City is a very heterogeneous city, with many pockets of inequality in close proximity. We then wanted to look at leave visually across zipcode. You can find that analysis here.  
 
-### **Unpaid Leave and Job Type**
-```{r}
-job_type = 
-  merged_wfls %>%  
-  drop_na(job_type) %>% 
-  drop_na(unpaid_leave_weeks) %>% 
-  ggplot(aes(x = job_type, y = unpaid_leave_weeks, fill = job_type, alpha = 0.9)) + 
-  geom_boxplot() + 
-  ylim(0, 50) + 
-  labs(
-    title = "Unpaid Leave Weeks by Job Type",
-    x = "Job type",
-    y = "Unpaid Leave Weeks") + 
-  theme(legend.position = "none")
-
-ggplotly(job_type)
-```
-
-This visualization shows that mothers who were self-employed were slightly more likely to have longer unpaid leave weeks. However, these values did not value substantially across groups. 
-
-## NYC Health Report and Related Work
