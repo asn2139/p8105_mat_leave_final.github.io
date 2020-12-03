@@ -50,9 +50,9 @@ h1.title {
 
 2. How does length of maternity leave differ by zip code? Do these spacial patterns match the distribution of key socioeconomic characteristics?
 
-3. Is the geographic distribution of average length of maternity leave associated with X, Y, X?
+3. Is the geographic distribution of average length of maternity leave associated with job type, co parent status, education, race, income, and borough? 
 
-* note: fill in 
+
 
 ## Data {.tabset}
 
@@ -207,24 +207,29 @@ Figure 3 illustrates that white mothers were over represented in this sample. Fi
 
 After getting a sense of the distribution across key variables, our exploratory analysis aimed to examine how the length of leave varied by sociodemographic information. We looked at paid and total length of leave by race, leave by parenting status, leave by job type, and leave by income. We also looked at reasons for unemployment across race and education. Lastly, we examined postpartum checkup status by income. You can find that analysis here. 
 
-* NOTE: about maps 
+* NOTE: about maps. about shiny  
 
 
 
 ## Spatial Regression and Analysis 
-If you undertake formal statistical analyses, describe these in detail
+We ran a Univariate Local Moran’s I test, looked for spatial clusters of high and low unpaid leave weeks. It looks at clusters in the same zipcode and surround zipcode as well. It also looks for places where there is low leave locally but high leave amongst the zip code’s neighbors, and vice versa. Since the Moran’s I statistic was 0.055 and had a p-value = 0.2131, we could not move forward with a spacial analysis since there were no significant spatial clusters. 
+
+After conducting this spatial analysis, we also ran a linear regression including a number of important covariates identified in our exploratory analysis. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. 
+
+
 
 ## Discussion 
 
-* What were findings
-      * did not find any differences of leave (paid or unpaid) by race, parenting status, or income. This was not expected. 
-      * Reasons for unemployment, interesting that white mothers and mothers with a for year college degree or higher were most likely to choose to stay at home. highlights inequalities in society. 
-* what you expected? 
-* what insights into the data can you make?
-      * our data was almost exclusively categorical. 
-      * look at more representative sample of NYC
-      * look at paternal leave 
-
+  Our exploratory analysis did not find substantial differences of total or unpaid leave by race, parenting status, or income. This was not what we expected. However, one interesting finding from our exploratory analysis was that white mother and mothers with a four year college degree or higher were most likely to choose to stay at home. This  highlights inequalities in maternity leave, as those who are more privileged in society were more likely to choose to stay out of the workforce. Given these findings, we wanted to better understand the role geography plays in type and length of maternity leave across sociodemographic characteristics. Overall, these maps suggest that type of maternity leave, length of unpaid leave, and sociodemographic characteristics are clustered geographically in New York City. This was more in line with what we were expecting  
+  
+  We performed a spacial analysis regression to formerly test these associations. The Moran's I statistic was 0.055 and had a p-value of 0.2131, signifying that there were not significant spacial clusters. Based on these results, we could not move ahead with a spatial analysis. This was surprising and not what we expected. 
+  
+  Lastly, we ran a linear regression which included job type, co parenting status, total leave weeks, education, income, race, and borough.The only significant predictor of unpaid leave weeks was total paid leave weeks. This accounted for 64.35% of the relationship. This was also surprising, as we were expecting to see greater differences between sociodemographic groups. 
+  
+  As a whole, we were surprised with the lack of significant findings and spatial clusters. However, we think this may be attributed to the representation in the sample. 470 respondents were white while only 337 participants were non white. The way income categories were created may have also contributed to the lack of findings. The highest category for income was a family income of greater than 80,000. However, this may mask heterogeneity as the median family income in New York City in 63,799, according to the U.S. Census. Since the data was based on a phone questionnaire, it was almost exclusively categorical, masking heterogeneity. When attempting to build a predictor tool, we did not have enough data points to predict by neighborhood. Findings may have been different with a representative sample by geography and sociodemographic characteristics. 
+  
+  Lastly, an important limitaiton to note is that paternal and maternal leave are both important pieces in security economic stability within families and gender equality. We only had information on mothers. Future analyses should include a representative sample of New York City and include parents of all genders. 
+  
 
 Note: Take out conclusion tab 
 
@@ -408,10 +413,8 @@ merged_wfls %>%
 ggplotly(check)
 ```
 
-note: made proportion but looked like last hw and wasn't exciting b/c all well over .9
-
-Across all income categories, over 90% of mothers received a postpartum check up 4-6 weeks after giving birth. Mothers with a lower family income were more likely to not get a postpartum check up. 
+Across all income categories, over 90% of mothers received a postpartum check up 4-6 weeks after giving birth. Mothers with a lower family income were more likely to not get a postpartum check up.
 
 
+These visualizations suggest there were not stark differences of leave by sociodemographic characteristics. However, New York City is a very heterogeneous city, with many pockets of inequality in close proximity. We then wanted to look at leave visually across zipcode. You can find that analysis here.  
 
-## NYC Health Report and Related Work
