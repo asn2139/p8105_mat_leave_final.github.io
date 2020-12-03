@@ -1,0 +1,182 @@
+---
+title: "Maternity Leave in NYC"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    source_code: embed
+    runtime: shiny
+---
+
+```{r, include=FALSE}
+library(tidyverse)
+library(plotly)
+library(flexdashboard)
+library(shiny)
+library(rsconnect)
+library (tigris)
+library(rgdal)
+library(dplyr)
+library(leaflet)
+library(sp)
+
+# rsconnect::deployApp("./shiny.Rmd")
+
+#read in data frame for leave plots
+charts_df = 
+  read_csv("./data/merged_wfls.csv") %>% 
+  drop_na(borough)
+
+#create data frame with NAs for key sociodemographic variables removed
+charts_df_2 = 
+    read_csv("./data/merged_wfls.csv") %>% 
+    drop_na(borough, race, job_type, leave_type, education, partner, family_income)
+
+```
+
+By Neighborhood
+=====================================
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+```{r}
+#choose a borough
+
+borough_choice = charts_df %>% 
+  pull(borough) %>% unique() 
+
+selectInput(
+    "borough_choice",
+    h3("Choose a borough"),
+    choices = borough_choice)
+```
+
+Column {.tabset}
+-----------------------------------------------------------------------
+### Weeks of Paid and Unpaid Maternity Leave
+
+```{r}
+renderPlotly({
+  
+leaveweeks_df <- 
+  charts_df %>% 
+  filter(
+    borough == input$borough_choice
+    ) %>% 
+  group_by(leave_type) %>% 
+  mutate(
+    leave_type = factor(leave_type, levels=c("Paid", "Unpaid", "Both")),
+    ) %>% 
+  plot_ly(
+    x = ~leave_type, y = ~leave_weeks, color = ~neighborhood,
+    type = "box", colors = "viridis") %>%
+  layout(
+    boxmode = "group",
+    title = "Weeks of Maternity Leave",
+    xaxis = list(title = "Type of Leave"),
+    yaxis = list(title = ""))
+})
+```
+
+### Description
+
+These box plots display the distribution of weeks of paid and unpaid maternity leave for women who gave birth in 2014 by New York City borough. Users can de-select neighborhoods to more easily compare individual neighborhoods of interest. Hover over the plot to see the minimum, median, and maximum weeks of leave within each neighborhood.
+
+* "Paid" includes women who reported that all of the weeks of leave they took after giving birth were paid. 
+* "Unpaid" includes women who reported that all of the weeks of leave they took after giving birth were paid. 
+* "Both" includes women who took a mixture of paid and unpaid weeks of leave.
+
+
+By Sociodemographics
+=====================================
+
+Column {.sidebar}
+-----------------------------------------------------------------------
+```{r}
+#Select relevant data and set plot options
+
+race = charts_df_2 %>% 
+  pull(race) %>% unique()
+
+education = charts_df_2 %>% 
+  pull(education) %>% unique()
+
+partner = charts_df_2 %>% 
+  pull(partner) %>% unique()
+
+employment = charts_df_2 %>% 
+  pull(job_type) %>% unique()
+
+family_income = charts_df_2 %>% 
+  pull(family_income) %>% unique()
+
+selectInput(
+  "choice_1",
+  h3("Choose a characteristic to plot"),
+  choices = c("race", "job_type", "education", "partner", "family_income"),
+  selected = "race")
+
+conditionalPanel(
+  condition = "input.choice_1 == 'race'",
+  checkboxGroupInput( 
+  "sub_class",
+  h3("Race"),
+  choices = race,
+  selected = race))
+
+conditionalPanel(
+  condition = "input.choice_1 == 'job_type'",
+  checkboxGroupInput(
+  "sub_class", 
+  h3("Employment Type"), 
+  choices = employment,
+  selected = employment)) 
+ 
+conditionalPanel(
+  condition = "input.choice_1 == 'partner'", 
+  checkboxGroupInput(
+  "sub_class",
+  h3("Co-parenting Status"),
+  choices = partner,
+  selected = partner))
+
+conditionalPanel(
+  condition = "input.choice_1 == 'education'",  
+  checkboxGroupInput(
+  "sub_class",
+  h3("Education"),
+  choices = education,
+  selected = education))
+
+conditionalPanel(
+  condition = "input.choice_1 == 'family_income'",
+  checkboxGroupInput(
+  "sub_class",
+  h3("Family Income"), 
+  choices = family_income,
+  selected = family_income))
+```
+
+Column {.tabset}
+-----------------------------------------------------------------------
+
+### Weeks of Maternity leave by Sociodemographic Characteristics
+```{r}
+renderPlotly({
+
+  plot_ly(
+    data = charts_df %>% filter(get(input$choice_1) %in% input$sub_class),
+    x = ~get(input$choice_1), y = ~leave_weeks, color = ~get(input$choice_1),
+    type = "box", colors = "viridis") %>% 
+  layout(
+    title = paste("Weeks of maternity leave by", input$choice_1),
+    xaxis = list(title = input$choice_1),
+    yaxis = list(title = ""))
+})
+```
+
+### Description
+
+Use this interactive plot to display the length of maternity leave taken by women who gave birth in New York City in 2014 by key sociodemographic characteristics. After choosing a characteristic, click to select sub-categories to display. Hover over the plot to see the minimum, median, and maximum weeks of leave for each sub-category.
+
+
