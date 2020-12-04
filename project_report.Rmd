@@ -230,7 +230,6 @@ leave_weeks =
 merged_wfls %>% 
   drop_na(leave_weeks) %>% 
   ggplot(aes(x = leave_weeks)) + geom_bar() + 
-  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
   labs(
     title = "Fig 1. Leave weeks",
     x = "Number of Weeks",
@@ -239,13 +238,6 @@ merged_wfls %>%
 leave_weeks
 
 
-merged_wfls %>% 
-  drop_na(leave_weeks) %>% 
-  group_by(leave_weeks) %>% 
-  summarize(
-    n_obs = n()
-  ) %>% 
-   knitr::kable(digits = 1)
   
 ```
 
@@ -255,7 +247,6 @@ unpaid_leave_weeks =
 merged_wfls %>% 
   drop_na(unpaid_leave_weeks) %>% 
   ggplot(aes(x = unpaid_leave_weeks)) + geom_bar() + 
-  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1)) + 
   labs(
     title = "Fig 2. Unpaid leave weeks",
     x = "Number of Weeks",
@@ -263,13 +254,6 @@ merged_wfls %>%
 
 unpaid_leave_weeks
 
-merged_wfls %>% 
-  drop_na(unpaid_leave_weeks) %>% 
-  group_by(unpaid_leave_weeks) %>% 
-  summarize(
-    n_obs = n()
-  ) %>% 
-   knitr::kable(digits = 1)
 
 ```
 
