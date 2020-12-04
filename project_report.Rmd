@@ -64,6 +64,137 @@ We obtained the data from the [NYC Open Data](https://data.cityofnewyork.us/Heal
 
 Our cleaned data consists of 1,063 rows and 20 columns. It includes information on the variables below. 
 
+## Data Cleaning
+
+Step 1: Tidying Data and Creating Relevant Variables
+
+![](images/tidying.jpg)
+```{r}
+wfls_df = 
+  read_csv("./data/WFLS_2014.csv") %>% 
+  mutate(
+    recode_el12mns = el12mns*4,
+    el11 = as.character(el11),
+    leave_type = case_when(
+      el11 == '1' ~ "Paid",
+      el11 == '2' ~ "Unpaid",
+      el11 == '3' ~ "Both",
+      el11 == '4' ~ "Did not take time off"),
+    leave_weeks = coalesce(recode_el12mns, el12wks),
+    leave_weeks = na_if(leave_weeks, 77),
+    leave_weeks = na_if(leave_weeks, 99),
+    ulw_recode = case_when(
+      leave_type == "Unpaid" ~ leave_weeks),
+    unpaid_leave_weeks = coalesce(ulw_recode, el13d),
+    pct_unpaid = round((unpaid_leave_weeks/leave_weeks)*100),
+    partner = case_when(
+      cp1 == '1' ~ "Co-parent",
+      cp1 == '2' ~ "Single Parent"),
+    education = case_when(
+      d7 == '1' ~ "No high school degree",
+      d7 == '2' ~ "No high school degree",
+      d7 == '3' ~ "No high school degree",
+      d7 == '4' ~ "High school degree/GED",
+      d7 == '5' ~ "Some college or technical school",
+      d7 == '6' ~ "Four year college or higher"),
+    d4_2 = na_if(d4_2, 77),
+    d4_2 = na_if(d4_2, 99),
+    race = case_when(
+      d4_1 == '1' ~ "White",
+      d4_1 == '2' ~ "Black/African American",
+      d4_1 == '3' ~ "Asian",
+      d4_1 == '4' ~ "Native Hawaiian/OPI",
+      d4_1 == '5' ~ "American Indian/AN",
+      d4_1 == '8' ~ "Other",
+      d4_2 >= 1 ~ "Multiple",
+      d3 == 1 ~ "Hispanic"),
+    job_type = case_when(
+      el3 == '1' ~ "Government",
+      el3 == '2' ~ "Private",
+      el3 == '3' ~ "Non-profit",
+      el3 == '4' ~ "Self-employed"), 
+    unemploy_reason = el16, 
+    unemploy_reason = case_when( 
+      el16 == '1' ~ "Fired related to pregnancy or maternity leave", 
+      el16 == '2' ~ "Chose to stay-at-home", 
+      el16 == '3' ~ "Not enough flexibility", 
+      el16 == '4' ~ "No affordable childcare", 
+      el16 == '5' ~ "My health issues", 
+      el16 == '6' ~ "Baby's health issues", 
+      el16 == '7' ~ "Currently a student", 
+      el16 == '8' ~ "Can't find work", 
+      el16 == '9' ~ "Looking for other jobs", 
+      el16 == '10' ~ "other") ,
+    bf1_1 = case_when(
+      bf1_1 == '1' ~ "Never", 
+      bf1_1 == '2' ~ "Less than 1 Week", 
+      bf1_1 == '3' ~ "Weeks", 
+      bf1_1 == '4' ~ "Months", 
+      bf1_1 == '5' ~ "Still breastfeeding", 
+      bf1_1 == '77' ~ "don't know", 
+      bf1_1 == '99' ~ "refused"), 
+    food_insecurity = case_when(
+      es2 == 1 ~ 1,
+      es1a == 1 ~ 1,
+      es1a == 2 ~ 1,
+      es1a == 3 ~ 1,
+      es2 == 0 ~ 0,
+      es1a == 4 ~ 0
+    ),
+    family_income = case_when(
+      es3 == '1' ~ "$16,000 or less",
+      es3 == '2' ~ "$16,001 to $20,000",
+      es3 == '3' ~ "$20,001 to 40,000",
+      es3 == '4' ~ "$20,001 to 40,000",
+      es3 == '5' ~ "$20,001 to 40,000",
+      es3 == '6' ~ "$20,001 to 40,000",
+      es3 == '7' ~ "$40,001 to 60,000",
+      es3 == '8' ~ "$40,001 to 60,000",
+      es3 == '9' ~ "$40,001 to 60,000",
+      es3 == '10' ~ "$60,001 to 85,000",
+      es3 == '11' ~ "$60,001 to 85,000",
+      es3 == '12' ~ "$85,000 or more"),
+      zipcode = fixd2) %>% 
+  select("ph1":"el1", "el9", "el11", "el13a":"el17f", "ih1", "mh4", "es1a": "es3", "SAMP_WEIGHT", "POP_WEIGHT", "leave_type":"pct_unpaid", "partner":"zipcode", "d4_2", "unemploy_reason", "bf1_1", "d7", "d4_1", "cp1", "el3")
+
+wfls_df =
+wfls_df %>% 
+  mutate(
+    race_num = race,
+      postpartum_check = case_when(
+      pph1 == '1' ~ "yes", 
+      pph1 == '2' ~ "no"), 
+    mean_leave_weeks = mean(leave_weeks)) %>% 
+  select("ph1":"el1", "el9", "el11", "el13a":"el17f", "ih1", "mh4", "es1a": "es3", "SAMP_WEIGHT", "POP_WEIGHT", "leave_type":"pct_unpaid", "partner":"zipcode", "postpartum_check", "d7") %>% 
+  select("ph1":"el1", "el9", "el11", "el13a":"el17f", "ih1", "mh4", "es1a":"es3", "SAMP_WEIGHT", "POP_WEIGHT", "leave_type":"pct_unpaid", "partner":"zipcode", "postpartum_check", "d7") %>% 
+  select("es3", "SAMP_WEIGHT", "POP_WEIGHT", "leave_type":"zipcode","postpartum_check", "d7")
+
+```
+
+Step 2: Save cleaned data set and merge with NYC zipcodes data
+
+![](images/csv.png)
+```{r}
+write.csv(wfls_df, "./data/cleaned_wfls.csv")
+```
+
+Step 3: Final Merge of All Relevant Datasets
+
+![](images/merging shot.png)
+
+```{r}
+cleaned_wfls = 
+  read_csv("./data/cleaned_wfls.csv")
+
+zipcodes =
+  read_xlsx("./data/zip_codes.xlsx") %>% 
+  mutate(zipcode = as.character(zipcode))
+
+merged_wfls = 
+  left_join(cleaned_wfls, zipcodes, by = "zipcode")
+
+write.csv(merged_wfls, "./data/merged_wfls.csv")
+```
 
 
 ## Variables of interest
@@ -86,25 +217,6 @@ Our cleaned data consists of 1,063 rows and 20 columns. It includes information 
  * `education` = highest level of school completed
  * `partner` = co-parenting status (single or co-parent)
  * `employment_type` = type of employment during pregnancy (government, private company, non-profit, self-employed)
-
-
-
-```{r, include=FALSE}
-cleaned_wfls = 
-  read_csv("./data/cleaned_wfls.csv")
-
-zipcodes =
-  read_xlsx("./data/zip_codes.xlsx") %>% 
-  mutate(zipcode = as.character(zipcode))
-
-merged_wfls = 
-  left_join(cleaned_wfls, zipcodes, by = "zipcode")
-
-write.csv(merged_wfls, "./data/merged_wfls.csv")
-
-merged_wfls
-```
-
 
 ## Descriptive Analysis 
 

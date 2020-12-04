@@ -438,6 +438,125 @@ h1.title {
 <p>We obtained the data from the <a href="https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe">NYC Open Data</a>. From here, we exported the data as a csv file. The raw dataset contained 1063 rows, and 153 columns. We created new variables based on data dictionary with descriptive names and responses, rather than the numeric responses in the original csv file. We then merged the cleaned data with a NYC zipcode shape file (available in the “maps” folder on our project GitHub.</p>
 <p>Our cleaned data consists of 1,063 rows and 20 columns. It includes information on the variables below.</p>
 </div>
+<div id="data-cleaning" class="section level2">
+<h2>Data Cleaning</h2>
+<p>Step 1: Tidying Data and Creating Relevant Variables</p>
+<p><img src="images/tidying.jpg" /></p>
+<pre class="r"><code>wfls_df = 
+  read_csv(&quot;./data/WFLS_2014.csv&quot;) %&gt;% 
+  mutate(
+    recode_el12mns = el12mns*4,
+    el11 = as.character(el11),
+    leave_type = case_when(
+      el11 == &#39;1&#39; ~ &quot;Paid&quot;,
+      el11 == &#39;2&#39; ~ &quot;Unpaid&quot;,
+      el11 == &#39;3&#39; ~ &quot;Both&quot;,
+      el11 == &#39;4&#39; ~ &quot;Did not take time off&quot;),
+    leave_weeks = coalesce(recode_el12mns, el12wks),
+    leave_weeks = na_if(leave_weeks, 77),
+    leave_weeks = na_if(leave_weeks, 99),
+    ulw_recode = case_when(
+      leave_type == &quot;Unpaid&quot; ~ leave_weeks),
+    unpaid_leave_weeks = coalesce(ulw_recode, el13d),
+    pct_unpaid = round((unpaid_leave_weeks/leave_weeks)*100),
+    partner = case_when(
+      cp1 == &#39;1&#39; ~ &quot;Co-parent&quot;,
+      cp1 == &#39;2&#39; ~ &quot;Single Parent&quot;),
+    education = case_when(
+      d7 == &#39;1&#39; ~ &quot;No high school degree&quot;,
+      d7 == &#39;2&#39; ~ &quot;No high school degree&quot;,
+      d7 == &#39;3&#39; ~ &quot;No high school degree&quot;,
+      d7 == &#39;4&#39; ~ &quot;High school degree/GED&quot;,
+      d7 == &#39;5&#39; ~ &quot;Some college or technical school&quot;,
+      d7 == &#39;6&#39; ~ &quot;Four year college or higher&quot;),
+    d4_2 = na_if(d4_2, 77),
+    d4_2 = na_if(d4_2, 99),
+    race = case_when(
+      d4_1 == &#39;1&#39; ~ &quot;White&quot;,
+      d4_1 == &#39;2&#39; ~ &quot;Black/African American&quot;,
+      d4_1 == &#39;3&#39; ~ &quot;Asian&quot;,
+      d4_1 == &#39;4&#39; ~ &quot;Native Hawaiian/OPI&quot;,
+      d4_1 == &#39;5&#39; ~ &quot;American Indian/AN&quot;,
+      d4_1 == &#39;8&#39; ~ &quot;Other&quot;,
+      d4_2 &gt;= 1 ~ &quot;Multiple&quot;,
+      d3 == 1 ~ &quot;Hispanic&quot;),
+    job_type = case_when(
+      el3 == &#39;1&#39; ~ &quot;Government&quot;,
+      el3 == &#39;2&#39; ~ &quot;Private&quot;,
+      el3 == &#39;3&#39; ~ &quot;Non-profit&quot;,
+      el3 == &#39;4&#39; ~ &quot;Self-employed&quot;), 
+    unemploy_reason = el16, 
+    unemploy_reason = case_when( 
+      el16 == &#39;1&#39; ~ &quot;Fired related to pregnancy or maternity leave&quot;, 
+      el16 == &#39;2&#39; ~ &quot;Chose to stay-at-home&quot;, 
+      el16 == &#39;3&#39; ~ &quot;Not enough flexibility&quot;, 
+      el16 == &#39;4&#39; ~ &quot;No affordable childcare&quot;, 
+      el16 == &#39;5&#39; ~ &quot;My health issues&quot;, 
+      el16 == &#39;6&#39; ~ &quot;Baby&#39;s health issues&quot;, 
+      el16 == &#39;7&#39; ~ &quot;Currently a student&quot;, 
+      el16 == &#39;8&#39; ~ &quot;Can&#39;t find work&quot;, 
+      el16 == &#39;9&#39; ~ &quot;Looking for other jobs&quot;, 
+      el16 == &#39;10&#39; ~ &quot;other&quot;) ,
+    bf1_1 = case_when(
+      bf1_1 == &#39;1&#39; ~ &quot;Never&quot;, 
+      bf1_1 == &#39;2&#39; ~ &quot;Less than 1 Week&quot;, 
+      bf1_1 == &#39;3&#39; ~ &quot;Weeks&quot;, 
+      bf1_1 == &#39;4&#39; ~ &quot;Months&quot;, 
+      bf1_1 == &#39;5&#39; ~ &quot;Still breastfeeding&quot;, 
+      bf1_1 == &#39;77&#39; ~ &quot;don&#39;t know&quot;, 
+      bf1_1 == &#39;99&#39; ~ &quot;refused&quot;), 
+    food_insecurity = case_when(
+      es2 == 1 ~ 1,
+      es1a == 1 ~ 1,
+      es1a == 2 ~ 1,
+      es1a == 3 ~ 1,
+      es2 == 0 ~ 0,
+      es1a == 4 ~ 0
+    ),
+    family_income = case_when(
+      es3 == &#39;1&#39; ~ &quot;$16,000 or less&quot;,
+      es3 == &#39;2&#39; ~ &quot;$16,001 to $20,000&quot;,
+      es3 == &#39;3&#39; ~ &quot;$20,001 to 40,000&quot;,
+      es3 == &#39;4&#39; ~ &quot;$20,001 to 40,000&quot;,
+      es3 == &#39;5&#39; ~ &quot;$20,001 to 40,000&quot;,
+      es3 == &#39;6&#39; ~ &quot;$20,001 to 40,000&quot;,
+      es3 == &#39;7&#39; ~ &quot;$40,001 to 60,000&quot;,
+      es3 == &#39;8&#39; ~ &quot;$40,001 to 60,000&quot;,
+      es3 == &#39;9&#39; ~ &quot;$40,001 to 60,000&quot;,
+      es3 == &#39;10&#39; ~ &quot;$60,001 to 85,000&quot;,
+      es3 == &#39;11&#39; ~ &quot;$60,001 to 85,000&quot;,
+      es3 == &#39;12&#39; ~ &quot;$85,000 or more&quot;),
+      zipcode = fixd2) %&gt;% 
+  select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;: &quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;d4_2&quot;, &quot;unemploy_reason&quot;, &quot;bf1_1&quot;, &quot;d7&quot;, &quot;d4_1&quot;, &quot;cp1&quot;, &quot;el3&quot;)
+
+wfls_df =
+wfls_df %&gt;% 
+  mutate(
+    race_num = race,
+      postpartum_check = case_when(
+      pph1 == &#39;1&#39; ~ &quot;yes&quot;, 
+      pph1 == &#39;2&#39; ~ &quot;no&quot;), 
+    mean_leave_weeks = mean(leave_weeks)) %&gt;% 
+  select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;: &quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;postpartum_check&quot;, &quot;d7&quot;) %&gt;% 
+  select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;:&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;postpartum_check&quot;, &quot;d7&quot;) %&gt;% 
+  select(&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;zipcode&quot;,&quot;postpartum_check&quot;, &quot;d7&quot;)</code></pre>
+<p>Step 2: Save cleaned data set and merge with NYC zipcodes data</p>
+<p><img src="images/csv.png" /></p>
+<pre class="r"><code>write.csv(wfls_df, &quot;./data/cleaned_wfls.csv&quot;)</code></pre>
+<p>Step 3: Final Merge of All Relevant Datasets</p>
+<p><img src="images/merging%20shot.png" /></p>
+<pre class="r"><code>cleaned_wfls = 
+  read_csv(&quot;./data/cleaned_wfls.csv&quot;)
+
+zipcodes =
+  read_xlsx(&quot;./data/zip_codes.xlsx&quot;) %&gt;% 
+  mutate(zipcode = as.character(zipcode))
+
+merged_wfls = 
+  left_join(cleaned_wfls, zipcodes, by = &quot;zipcode&quot;)
+
+write.csv(merged_wfls, &quot;./data/merged_wfls.csv&quot;)</code></pre>
+</div>
 <div id="variables-of-interest" class="section level2">
 <h2>Variables of interest</h2>
 <p><strong>Outcomes</strong></p>
@@ -476,7 +595,7 @@ merged_wfls %&gt;%
     y = &quot;Count&quot;) 
 
 leave_weeks</code></pre>
-<p><img src="project_report_files/figure-html/unnamed-chunk-2-1.png" width="90%" /></p>
+<p><img src="project_report_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
 <pre class="r"><code>merged_wfls %&gt;% 
   drop_na(leave_weeks) %&gt;% 
   group_by(leave_weeks) %&gt;% 
@@ -609,7 +728,7 @@ merged_wfls %&gt;%
     y = &quot;Count&quot;) 
 
 unpaid_leave_weeks</code></pre>
-<p><img src="project_report_files/figure-html/unnamed-chunk-3-1.png" width="90%" /></p>
+<p><img src="project_report_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
 <pre class="r"><code>merged_wfls %&gt;% 
   drop_na(unpaid_leave_weeks) %&gt;% 
   group_by(unpaid_leave_weeks) %&gt;% 
@@ -762,7 +881,7 @@ merged_wfls %&gt;%
     y = &quot;Count&quot;) 
 
 race</code></pre>
-<p><img src="project_report_files/figure-html/unnamed-chunk-4-1.png" width="90%" /></p>
+<p><img src="project_report_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
 <pre class="r"><code>education = 
 merged_wfls %&gt;% 
   drop_na(education) %&gt;% 
@@ -775,7 +894,7 @@ merged_wfls %&gt;%
     y = &quot;Count&quot;) 
 
 education</code></pre>
-<p><img src="project_report_files/figure-html/unnamed-chunk-5-1.png" width="90%" /></p>
+<p><img src="project_report_files/figure-html/unnamed-chunk-7-1.png" width="90%" /></p>
 <pre class="r"><code>income = 
   merged_wfls %&gt;% 
   drop_na(family_income) %&gt;% 
@@ -787,7 +906,7 @@ education</code></pre>
     y = &quot;Count&quot;) 
 
 income</code></pre>
-<p><img src="project_report_files/figure-html/unnamed-chunk-6-1.png" width="90%" /></p>
+<p><img src="project_report_files/figure-html/unnamed-chunk-8-1.png" width="90%" /></p>
 <p>Figure 3 illustrates that white mothers were over represented in this sample. Figure 4 illustrates that mothers with a four year college degree or higher had higher representation in this data. Figure 5 shows that those in households of 85,000 dollars or more were most sampled. However, a limitation of this categorization is that there may be a lot of heterogeneity in the highest income category, especially in an expensive city like New York.</p>
 </div>
 </div>
