@@ -11,7 +11,7 @@
 
 
 
-<title>Spatial Regression &amp; Analysis</title>
+<title>Spatial Analysis &amp; Regression</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -19,7 +19,11 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
@@ -256,7 +260,73 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
 
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
 
 
 
@@ -266,6 +336,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -321,35 +401,30 @@ $(document).ready(function () {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
-<h1 class="title toc-ignore">Spatial Regression &amp; Analysis</h1>
+
+<h1 class="title toc-ignore">Spatial Analysis &amp; Regression</h1>
 
 </div>
 
 
+<p>This page describes the steps we took to perform a spatial analysis and build a linear regression model to test the association between taking unpaid leave in NYC, borough, and sociodemographic characteristics.</p>
+<div id="key-results" class="section level2">
+<h2>Key Results</h2>
+<p>Because unpaid leave is likely related to income, and income is related to where a person lives, it is likely that there are spatial effects impacting rates of unpaid leave. To understand this,we ran a Univariate Local Moran’s I test, which was looking for spatial clusters of high and low unpaid leave weeks. This test seeks clusters that have a high number of unpaid leave weeks within the zipcode, but also in the zipcodes surrounding it. It also looks for clusters that have low local unpaid leave weeks and low unpaid leave weeks in the zip codes surrounding it. Finally, it looks for places where there is low leave locally but high leave amongst the zip code’s neighbors, and vice versa. This resulted in a Moran’s I statistic of 0.055 and a p-value = 0.2131, signifying that there were not significant spatial clusters. We could not move ahead with spatial analysis due to this finding, but it is likely that spatial clustering would exist with a more representative sample of NYC.</p>
+</div>
 <div id="spatial-analysis" class="section level2">
 <h2>Spatial Analysis</h2>
-<pre class="r"><code>library(tidyverse)
-library(spdep)
-library(maptools)
-library(rgdal)
-library(spatialreg)
-library(sf)
-unpaid_poly &lt;- readOGR(dsn = &quot;nyc_only_zips.shp&quot;, layer = &quot;nyc_only_zips&quot;)</code></pre>
-<pre><code>## OGR data source with driver: ESRI Shapefile 
-## Source: &quot;/Users/akanksha/Documents/Fall2020/DataScience/p8105_maternity_leave_nyc/map/nyc_only_zips.shp&quot;, layer: &quot;nyc_only_zips&quot;
-## with 185 features
-## It has 19 fields
-## Integer64 fields read as strings:  ALAND10 AWATER10 leavetype parenttype leaveweeks wksunpaid edtype race jobtypefix</code></pre>
-<pre class="r"><code>names(unpaid_poly)</code></pre>
-<pre><code>##  [1] &quot;ZCTA5CE10&quot;   &quot;AFFGEOID10&quot;  &quot;GEOID10&quot;     &quot;ALAND10&quot;     &quot;AWATER10&quot;   
-##  [6] &quot;leavetype&quot;   &quot;parenttype&quot;  &quot;leaveweeks&quot;  &quot;wksunpaid&quot;   &quot;X.unpaid&quot;   
-## [11] &quot;edtype&quot;      &quot;race&quot;        &quot;jobtypefix&quot;  &quot;X.food_inse&quot; &quot;X.family_in&quot;
-## [16] &quot;X.postpartu&quot; &quot;X.mean_leav&quot; &quot;X.borough&quot;   &quot;X.neighborh&quot;</code></pre>
 <div id="creating-a-queens-neighborhood-weight-matrix-using-the-poly2nb-command." class="section level3">
 <h3>Creating a queen’s neighborhood weight matrix using the poly2nb command.</h3>
-<pre class="r"><code>unpaid_nbq &lt;- poly2nb(unpaid_poly)</code></pre>
 </div>
 <div id="extracting-coordinates-to-plot-the-connectivity-matrix-for-potential-visualization." class="section level3">
 <h3>Extracting coordinates to plot the connectivity matrix for potential visualization.</h3>
@@ -360,113 +435,9 @@ plot(unpaid_nbq, coords, add=T)</code></pre>
 </div>
 <div id="converting-the-neighborhood-matrix-into-a-list-so-that-the-connections-between-counties-can-be-used-in-morans-i-test." class="section level3">
 <h3>Converting the neighborhood matrix into a list so that the connections between counties can be used in Moran’s I test.</h3>
-<pre class="r"><code>summary(unpaid_nbq)</code></pre>
-<pre><code>## Neighbour list object:
-## Number of regions: 185 
-## Number of nonzero links: 830 
-## Percentage nonzero weights: 2.425128 
-## Average number of links: 4.486486 
-## 1 region with no links:
-## 26
-## Link number distribution:
-## 
-##  0  1  2  3  4  5  6  7  8  9 11 
-##  1  7 18 29 33 51 24 13  5  3  1 
-## 7 least connected regions:
-## 35 56 64 70 115 137 146 with 1 link
-## 1 most connected region:
-## 145 with 11 links</code></pre>
-<pre class="r"><code>unpaid_nbq_w &lt;- nb2listw(unpaid_nbq, zero.policy=TRUE)</code></pre>
 </div>
 <div id="converting-exposure-variable-to-z-form-and-then-create-the-lag-of-that-variable." class="section level3">
 <h3>Converting Exposure variable to z-form and then create the lag of that variable.</h3>
-<pre class="r"><code>unpaid_poly$swksunpaid &lt;- scale(as.numeric(unpaid_poly$wksunpaid))
-unpaid_poly$lag_sWU &lt;- lag.listw(unpaid_nbq_w, unpaid_poly$swksunpaid, zero.policy=TRUE, NAOK=TRUE)</code></pre>
-<pre><code>## Warning in lag.listw(unpaid_nbq_w, unpaid_poly$swksunpaid, zero.policy = TRUE, :
-## NAs in lagged values</code></pre>
-<pre class="r"><code>summary(unpaid_poly$swksunpaid)</code></pre>
-<pre><code>##        V1          
-##  Min.   :-0.71591  
-##  1st Qu.:-0.71591  
-##  Median :-0.21390  
-##  Mean   : 0.00000  
-##  3rd Qu.: 0.08731  
-##  Max.   : 4.50496  
-##  NA&#39;s   :70</code></pre>
-<pre class="r"><code>summary(unpaid_poly$lag_sWU)</code></pre>
-<pre><code>##        V1          
-##  Min.   :-0.71591  
-##  1st Qu.:-0.32685  
-##  Median :-0.09342  
-##  Mean   : 0.06246  
-##  3rd Qu.: 0.30819  
-##  Max.   : 1.49292  
-##  NA&#39;s   :149</code></pre>
-<pre class="r"><code>names(unpaid_poly)</code></pre>
-<pre><code>##  [1] &quot;ZCTA5CE10&quot;   &quot;AFFGEOID10&quot;  &quot;GEOID10&quot;     &quot;ALAND10&quot;     &quot;AWATER10&quot;   
-##  [6] &quot;leavetype&quot;   &quot;parenttype&quot;  &quot;leaveweeks&quot;  &quot;wksunpaid&quot;   &quot;X.unpaid&quot;   
-## [11] &quot;edtype&quot;      &quot;race&quot;        &quot;jobtypefix&quot;  &quot;X.food_inse&quot; &quot;X.family_in&quot;
-## [16] &quot;X.postpartu&quot; &quot;X.mean_leav&quot; &quot;X.borough&quot;   &quot;X.neighborh&quot; &quot;swksunpaid&quot; 
-## [21] &quot;lag_sWU&quot;</code></pre>
-<pre class="r"><code>head(unpaid_poly)</code></pre>
-<pre><code>##   ZCTA5CE10     AFFGEOID10 GEOID10 ALAND10 AWATER10 leavetype parenttype
-## 0     10040 8600000US10040   10040  988493        0         2          2
-## 1     11207 8600000US11207   11207 6920385        0         2          2
-## 2     10456 8600000US10456   10456 2635671        0         1          1
-## 3     11417 8600000US11417   11417 2898418        0      &lt;NA&gt;          1
-## 4     11104 8600000US11104   11104 1005110        0         2          1
-## 5     10024 8600000US10024   10024 2222641        0         2          1
-##   leaveweeks wksunpaid X.unpaid edtype race jobtypefix X.food_inse
-## 0         48        48      100      6    8          2           0
-## 1          4         4      100      4    1          2           1
-## 2          8         0        0      5    1          2           1
-## 3       &lt;NA&gt;      &lt;NA&gt;       NA      4    1       &lt;NA&gt;           1
-## 4          4         4      100      6    1          3           0
-## 5          6         6      100      6    1          4           0
-##         X.family_in X.postpartu X.mean_leav X.borough
-## 0 Less than $16,000         yes          NA Manhattan
-## 1                NA         yes          NA  Brooklyn
-## 2 $20,001 to 40,000         yes          NA     Bronx
-## 3                NA         yes          NA    Queens
-## 4 More than $85,000         yes          NA    Queens
-## 5                NA         yes          NA Manhattan
-##                     X.neighborh swksunpaid    lag_sWU
-## 0 Inwood and Washington Heights  4.1033589 -0.3142998
-## 1    East New York and New Lots -0.3142998         NA
-## 2    High Bridge and Morrisania -0.7159052         NA
-## 3              Southwest Queens         NA         NA
-## 4              Northwest Queens -0.3142998         NA
-## 5               Upper West Side -0.1134972         NA</code></pre>
-<pre class="r"><code>unpaid_data &lt;- as.data.frame(unpaid_poly)
-head(unpaid_data)</code></pre>
-<pre><code>##   ZCTA5CE10     AFFGEOID10 GEOID10 ALAND10 AWATER10 leavetype parenttype
-## 0     10040 8600000US10040   10040  988493        0         2          2
-## 1     11207 8600000US11207   11207 6920385        0         2          2
-## 2     10456 8600000US10456   10456 2635671        0         1          1
-## 3     11417 8600000US11417   11417 2898418        0      &lt;NA&gt;          1
-## 4     11104 8600000US11104   11104 1005110        0         2          1
-## 5     10024 8600000US10024   10024 2222641        0         2          1
-##   leaveweeks wksunpaid X.unpaid edtype race jobtypefix X.food_inse
-## 0         48        48      100      6    8          2           0
-## 1          4         4      100      4    1          2           1
-## 2          8         0        0      5    1          2           1
-## 3       &lt;NA&gt;      &lt;NA&gt;       NA      4    1       &lt;NA&gt;           1
-## 4          4         4      100      6    1          3           0
-## 5          6         6      100      6    1          4           0
-##         X.family_in X.postpartu X.mean_leav X.borough
-## 0 Less than $16,000         yes          NA Manhattan
-## 1                NA         yes          NA  Brooklyn
-## 2 $20,001 to 40,000         yes          NA     Bronx
-## 3                NA         yes          NA    Queens
-## 4 More than $85,000         yes          NA    Queens
-## 5                NA         yes          NA Manhattan
-##                     X.neighborh swksunpaid    lag_sWU
-## 0 Inwood and Washington Heights  4.1033589 -0.3142998
-## 1    East New York and New Lots -0.3142998         NA
-## 2    High Bridge and Morrisania -0.7159052         NA
-## 3              Southwest Queens         NA         NA
-## 4              Northwest Queens -0.3142998         NA
-## 5               Upper West Side -0.1134972         NA</code></pre>
 </div>
 <div id="running-the-univariate-morans-i-test." class="section level3">
 <h3>Running the Univariate Moran’s I test.</h3>
@@ -489,298 +460,149 @@ head(unpaid_data)</code></pre>
 <h3>Results: Moran’s I statistic: 0.055, p-value = 0.2131</h3>
 </div>
 </div>
+<div id="residuals" class="section level2">
+<h2>Residuals</h2>
+<p>We were interested in running a linear regression model, but first wanted to look at the residuals of the covariates we were interested in. They all look regular and similarly distributed.</p>
+</div>
 <div id="regression" class="section level2">
-<h2>REGRESSION</h2>
-<p>###Test baseline linear model.</p>
-<pre class="r"><code>unpaid.lm &lt;- lm(wksunpaid~jobtypefix + parenttype + as.numeric(leaveweeks) + edtype + race + X.family_in + X.borough, data=unpaid_poly)
-summary(unpaid.lm)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = wksunpaid ~ jobtypefix + parenttype + as.numeric(leaveweeks) + 
-##     edtype + race + X.family_in + X.borough, data = unpaid_poly)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -14.8046  -3.3772  -0.6838   3.8329  29.2983 
-## 
-## Coefficients:
-##                              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                  -7.46710    7.20117  -1.037   0.3026    
-## jobtypefix2                  -3.02958    2.22352  -1.363   0.1765    
-## jobtypefix3                  -0.67483    2.69033  -0.251   0.8025    
-## jobtypefix4                   3.41461    3.36049   1.016   0.3124    
-## parenttype2                   1.85809    2.15379   0.863   0.3906    
-## as.numeric(leaveweeks)        0.82293    0.09005   9.139 2.12e-14 ***
-## edtype3                       2.84672    8.88166   0.321   0.7493    
-## edtype4                       6.46675    5.75918   1.123   0.2646    
-## edtype5                      10.39186    5.83640   1.781   0.0784 .  
-## edtype6                       5.40925    5.85066   0.925   0.3577    
-## race2                        -2.16131    2.31345  -0.934   0.3527    
-## race3                         0.64660    2.19656   0.294   0.7692    
-## race8                         0.76054    2.71080   0.281   0.7797    
-## X.family_in$20,001 to 40,000 -1.07175    3.91522  -0.274   0.7849    
-## X.family_in$40,001 to 60,000 -1.81623    5.03134  -0.361   0.7190    
-## X.family_in$60,001 to 85,000  1.00485    4.22699   0.238   0.8127    
-## X.family_inLess than $16,000  5.91670    4.25478   1.391   0.1679    
-## X.family_inMore than $85,000 -2.64584    4.03999  -0.655   0.5142    
-## X.family_inNA                -3.82154    4.33807  -0.881   0.3808    
-## X.boroughBrooklyn             1.46119    2.84123   0.514   0.6083    
-## X.boroughManhattan            0.99664    2.53663   0.393   0.6953    
-## X.boroughNA                   7.20599    5.70932   1.262   0.2102    
-## X.boroughQueens               0.43289    2.57355   0.168   0.8668    
-## X.boroughStaten Island       -2.22852    3.98350  -0.559   0.5773    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 6.767 on 88 degrees of freedom
-##   (73 observations deleted due to missingness)
-## Multiple R-squared:  0.6435, Adjusted R-squared:  0.5504 
-## F-statistic: 6.907 on 23 and 88 DF,  p-value: 1.176e-11</code></pre>
+<h2>Regression</h2>
+<p>###Test linear model.</p>
+<p>After conducting this spatial analysis, we also ran a linear regression including a number of important covariates identified in our exploratory analysis. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. We found an F-statistic of 6.907 with a p-value of &lt; 0.01 on the overall regression. More specifically, we found significance among the number of weeks of total leave (p &lt; 0.001). As weeks of total leave increases, so does the number of unpaid leave weeks. No other covariate was significant. This accounts for 64.35% of the relationship.</p>
 <div id="output" class="section level3">
 <h3>Output</h3>
-<pre class="r"><code>unpaid.lm %&gt;% 
-  broom::glance()</code></pre>
-<pre><code>## # A tibble: 1 x 12
-##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.644         0.550  6.77      6.91 1.18e-11    23  -360.  769.  837.
-## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;</code></pre>
-<pre class="r"><code>lm_output = 
-unpaid.lm %&gt;% 
-  broom::tidy() %&gt;% 
-  select(term, estimate, p.value) %&gt;% 
-  mutate(
-    term = str_replace(term, &quot;^jobtypefix&quot;, &quot;Job type: &quot;),
-    term = str_replace(term, &quot;^parenttype&quot;,  &quot;Partner: &quot;),
-    term = str_replace(term, &quot;^as.numeric(leaveweeks)&quot;,  &quot;Number of weeks on leave&quot;),
-    term = str_replace(term, &quot;^edtype&quot;, &quot;Education: &quot;),
-    term = str_replace(term, &quot;^race&quot;, &quot;Race: &quot;),
-    term = str_replace(term, &quot;^X.family_in&quot;, &quot;Family Income: &quot;),
-    term = str_replace(term, &quot;^X.borough&quot;, &quot;Borough: &quot;),
-    term = str_replace(term, &quot;^Job type: 2&quot;, &quot;Job type: Private&quot;),
-    term = str_replace(term, &quot;^Job type: 3&quot;, &quot;Job type: Non-profit&quot;),
-    term = str_replace(term, &quot;^Job type: 4&quot;, &quot;Job type: Self-employed&quot;),
-    term = str_replace(term, &quot;^Partner: 2&quot;, &quot;Partner: Single parent&quot;),
-    term = str_replace(term, &quot;^Education: 3&quot;, &quot;Education: No high school degree&quot;),
-    term = str_replace(term, &quot;^Education: 4&quot;, &quot;Education: High school degree/GED&quot;),
-    term = str_replace(term, &quot;^Education: 5&quot;, &quot;Education: Some college or technical school&quot;),
-    term = str_replace(term, &quot;^Education: 6&quot;, &quot;Education: Four-year college or higher&quot;),
-    term = str_replace(term, &quot;^Race: 2&quot;, &quot;Race: Black/African American&quot;),
-    term = str_replace(term, &quot;^Race: 3&quot;, &quot;Race: Asian&quot;),
-    term = str_replace(term, &quot;^Race: 8&quot;, &quot;Race: Other&quot;)) %&gt;% 
-  knitr::kable(digits = 3)</code></pre>
+<pre class="r"><code>lm_output</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">-7.467</td>
+<td align="right">0.303</td>
+</tr>
+<tr class="even">
+<td align="left">Job type: Private</td>
+<td align="right">-3.030</td>
+<td align="right">0.177</td>
+</tr>
+<tr class="odd">
+<td align="left">Job type: Non-profit</td>
+<td align="right">-0.675</td>
+<td align="right">0.803</td>
+</tr>
+<tr class="even">
+<td align="left">Job type: Self-employed</td>
+<td align="right">3.415</td>
+<td align="right">0.312</td>
+</tr>
+<tr class="odd">
+<td align="left">Partner: Single parent</td>
+<td align="right">1.858</td>
+<td align="right">0.391</td>
+</tr>
+<tr class="even">
+<td align="left">as.numeric(leaveweeks)</td>
+<td align="right">0.823</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td align="left">Education: No high school degree</td>
+<td align="right">2.847</td>
+<td align="right">0.749</td>
+</tr>
+<tr class="even">
+<td align="left">Education: High school degree/GED</td>
+<td align="right">6.467</td>
+<td align="right">0.265</td>
+</tr>
+<tr class="odd">
+<td align="left">Education: Some college or technical school</td>
+<td align="right">10.392</td>
+<td align="right">0.078</td>
+</tr>
+<tr class="even">
+<td align="left">Education: Four-year college or higher</td>
+<td align="right">5.409</td>
+<td align="right">0.358</td>
+</tr>
+<tr class="odd">
+<td align="left">Race: Black/African American</td>
+<td align="right">-2.161</td>
+<td align="right">0.353</td>
+</tr>
+<tr class="even">
+<td align="left">Race: Asian</td>
+<td align="right">0.647</td>
+<td align="right">0.769</td>
+</tr>
+<tr class="odd">
+<td align="left">Race: Other</td>
+<td align="right">0.761</td>
+<td align="right">0.780</td>
+</tr>
+<tr class="even">
+<td align="left">Family Income: $20,001 to 40,000</td>
+<td align="right">-1.072</td>
+<td align="right">0.785</td>
+</tr>
+<tr class="odd">
+<td align="left">Family Income: $40,001 to 60,000</td>
+<td align="right">-1.816</td>
+<td align="right">0.719</td>
+</tr>
+<tr class="even">
+<td align="left">Family Income: $60,001 to 85,000</td>
+<td align="right">1.005</td>
+<td align="right">0.813</td>
+</tr>
+<tr class="odd">
+<td align="left">Family Income: Less than $16,000</td>
+<td align="right">5.917</td>
+<td align="right">0.168</td>
+</tr>
+<tr class="even">
+<td align="left">Family Income: More than $85,000</td>
+<td align="right">-2.646</td>
+<td align="right">0.514</td>
+</tr>
+<tr class="odd">
+<td align="left">Family Income: NA</td>
+<td align="right">-3.822</td>
+<td align="right">0.381</td>
+</tr>
+<tr class="even">
+<td align="left">Borough: Brooklyn</td>
+<td align="right">1.461</td>
+<td align="right">0.608</td>
+</tr>
+<tr class="odd">
+<td align="left">Borough: Manhattan</td>
+<td align="right">0.997</td>
+<td align="right">0.695</td>
+</tr>
+<tr class="even">
+<td align="left">Borough: NA</td>
+<td align="right">7.206</td>
+<td align="right">0.210</td>
+</tr>
+<tr class="odd">
+<td align="left">Borough: Queens</td>
+<td align="right">0.433</td>
+<td align="right">0.867</td>
+</tr>
+<tr class="even">
+<td align="left">Borough: Staten Island</td>
+<td align="right">-2.229</td>
+<td align="right">0.577</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div id="residuals" class="section level3">
-<h3>Residuals</h3>
-<pre class="r"><code>library(tidyverse)
-library(readxl)
-library(plotly)
-library(janitor)
-
-cleaned_wfls = 
-  read_csv(&quot;~/Documents/Fall2020/DataScience/p8105_mat_leave_final.github.io/data/cleaned_wfls.csv&quot;)</code></pre>
-<pre><code>## Warning: Missing column names filled in: &#39;X1&#39; [1]</code></pre>
-<pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
-## cols(
-##   X1 = col_double(),
-##   es3 = col_double(),
-##   SAMP_WEIGHT = col_double(),
-##   POP_WEIGHT = col_double(),
-##   leave_type = col_character(),
-##   leave_weeks = col_double(),
-##   ulw_recode = col_double(),
-##   unpaid_leave_weeks = col_double(),
-##   pct_unpaid = col_double(),
-##   partner = col_character(),
-##   education = col_character(),
-##   race = col_character(),
-##   job_type = col_character(),
-##   unemploy_reason = col_character(),
-##   food_insecurity = col_double(),
-##   family_income = col_character(),
-##   zipcode = col_character(),
-##   postpartum_check = col_character(),
-##   d7 = col_double()
-## )</code></pre>
-<pre class="r"><code>zipcodes =
-  read_xlsx(&quot;~/Documents/Fall2020/DataScience/p8105_mat_leave_final.github.io/data/zip_codes.xlsx&quot;) %&gt;% 
-  mutate(zipcode = as.character(zipcode))
-
-merged_wfls = 
-  left_join(cleaned_wfls, zipcodes, by = &quot;zipcode&quot;)
-
-write.csv(merged_wfls, &quot;~/Documents/Fall2020/DataScience/p8105_mat_leave_final.github.io/data/merged_wfls.csv&quot;)</code></pre>
-<pre class="r"><code>library(readr)
-linear_df = 
- read_csv(&quot;~/Documents/Fall2020/DataScience/p8105_mat_leave_final.github.io/data/merged_wfls.csv&quot;)</code></pre>
-<pre><code>## Warning: Missing column names filled in: &#39;X1&#39; [1]</code></pre>
-<pre><code>## Warning: Duplicated column names deduplicated: &#39;X1&#39; =&gt; &#39;X1_1&#39; [2]</code></pre>
-<pre><code>## 
-## ── Column specification ────────────────────────────────────────────────────────
-## cols(
-##   .default = col_character(),
-##   X1 = col_double(),
-##   X1_1 = col_double(),
-##   es3 = col_double(),
-##   SAMP_WEIGHT = col_double(),
-##   POP_WEIGHT = col_double(),
-##   leave_weeks = col_double(),
-##   ulw_recode = col_double(),
-##   unpaid_leave_weeks = col_double(),
-##   pct_unpaid = col_double(),
-##   food_insecurity = col_double(),
-##   d7 = col_double()
-## )
-## ℹ Use `spec()` for the full column specifications.</code></pre>
-<pre class="r"><code>merged.lm &lt;- lm(unpaid_leave_weeks~job_type + partner + leave_weeks + education + race + family_income + borough, data=linear_df)
-summary(merged.lm)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = unpaid_leave_weeks ~ job_type + partner + leave_weeks + 
-##     education + race + family_income + borough, data = linear_df)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -36.408  -4.711  -1.305   3.210  69.740 
-## 
-## Coefficients:
-##                                           Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)                                0.90220    6.84073   0.132  0.89513
-## job_typeNon-profit                        -3.34899    2.03800  -1.643  0.10097
-## job_typePrivate                           -3.96348    1.66648  -2.378  0.01777
-## job_typeSelf-employed                     -0.75054    2.68043  -0.280  0.77959
-## partnerSingle Parent                       0.34712    1.61263   0.215  0.82966
-## leave_weeks                                0.92618    0.05584  16.586  &lt; 2e-16
-## educationHigh school degree/GED            2.12941    1.87296   1.137  0.25612
-## educationNo high school degree             2.08970    2.86414   0.730  0.46598
-## educationSome college or technical school  4.85693    1.80424   2.692  0.00735
-## raceAsian                                  1.69958    6.41569   0.265  0.79119
-## raceBlack/African American                 1.52934    6.23779   0.245  0.80642
-## raceHispanic                               1.45647    7.01680   0.208  0.83565
-## raceNative Hawaiian/OPI                    0.67589    8.23728   0.082  0.93464
-## raceOther                                  0.36632    6.32444   0.058  0.95384
-## raceWhite                                  3.06425    6.21739   0.493  0.62234
-## family_income$16,001 to $20,000           -3.95779    2.45305  -1.613  0.10729
-## family_income$20,001 to 40,000            -0.55890    1.93151  -0.289  0.77243
-## family_income$40,001 to 60,000            -2.31846    2.39371  -0.969  0.33324
-## family_income$60,001 to 85,000            -5.09289    2.61220  -1.950  0.05178
-## family_income$85,000 or more              -5.03087    2.16702  -2.322  0.02066
-## boroughBrooklyn                           -0.53474    1.75532  -0.305  0.76077
-## boroughManhattan                          -1.43988    1.99675  -0.721  0.47118
-## boroughQueens                             -3.63536    1.90711  -1.906  0.05721
-## boroughStaten Island                      -6.25926    3.17923  -1.969  0.04954
-##                                              
-## (Intercept)                                  
-## job_typeNon-profit                           
-## job_typePrivate                           *  
-## job_typeSelf-employed                        
-## partnerSingle Parent                         
-## leave_weeks                               ***
-## educationHigh school degree/GED              
-## educationNo high school degree               
-## educationSome college or technical school ** 
-## raceAsian                                    
-## raceBlack/African American                   
-## raceHispanic                                 
-## raceNative Hawaiian/OPI                      
-## raceOther                                    
-## raceWhite                                    
-## family_income$16,001 to $20,000              
-## family_income$20,001 to 40,000               
-## family_income$40,001 to 60,000               
-## family_income$60,001 to 85,000            .  
-## family_income$85,000 or more              *  
-## boroughBrooklyn                              
-## boroughManhattan                             
-## boroughQueens                             .  
-## boroughStaten Island                      *  
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 11.97 on 492 degrees of freedom
-##   (547 observations deleted due to missingness)
-## Multiple R-squared:  0.4082, Adjusted R-squared:  0.3805 
-## F-statistic: 14.75 on 23 and 492 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>modelr::add_residuals(linear_df, merged.lm)</code></pre>
-<pre><code>## # A tibble: 1,063 x 23
-##       X1  X1_1   es3 SAMP_WEIGHT POP_WEIGHT leave_type leave_weeks ulw_recode
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;
-##  1     1     1    77       0.711       72.5 Paid                 8         NA
-##  2     2     2    12       1.35       138.  Both                 4         NA
-##  3     3     3     1       1.76       179.  &lt;NA&gt;                NA         NA
-##  4     4     4     1       2.41       245.  Paid                 1         NA
-##  5     5     5    77       1.08       110.  &lt;NA&gt;                NA         NA
-##  6     6     6     2       0.531       54.2 Paid                 4         NA
-##  7     7     7    99       0.793       80.9 Unpaid              12         12
-##  8     8     8    12       1.17       119.  Paid                 8         NA
-##  9     9     9     9       0.455       46.4 Unpaid              11         11
-## 10    10    10     1       1.70       173.  Did not t…          NA         NA
-## # … with 1,053 more rows, and 15 more variables: unpaid_leave_weeks &lt;dbl&gt;,
-## #   pct_unpaid &lt;dbl&gt;, partner &lt;chr&gt;, education &lt;chr&gt;, race &lt;chr&gt;,
-## #   job_type &lt;chr&gt;, unemploy_reason &lt;chr&gt;, food_insecurity &lt;dbl&gt;,
-## #   family_income &lt;chr&gt;, zipcode &lt;chr&gt;, postpartum_check &lt;chr&gt;, d7 &lt;dbl&gt;,
-## #   borough &lt;chr&gt;, neighborhood &lt;chr&gt;, resid &lt;dbl&gt;</code></pre>
-<pre class="r"><code>modelr::add_predictions(linear_df, merged.lm)</code></pre>
-<pre><code>## # A tibble: 1,063 x 23
-##       X1  X1_1   es3 SAMP_WEIGHT POP_WEIGHT leave_type leave_weeks ulw_recode
-##    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;       &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;
-##  1     1     1    77       0.711       72.5 Paid                 8         NA
-##  2     2     2    12       1.35       138.  Both                 4         NA
-##  3     3     3     1       1.76       179.  &lt;NA&gt;                NA         NA
-##  4     4     4     1       2.41       245.  Paid                 1         NA
-##  5     5     5    77       1.08       110.  &lt;NA&gt;                NA         NA
-##  6     6     6     2       0.531       54.2 Paid                 4         NA
-##  7     7     7    99       0.793       80.9 Unpaid              12         12
-##  8     8     8    12       1.17       119.  Paid                 8         NA
-##  9     9     9     9       0.455       46.4 Unpaid              11         11
-## 10    10    10     1       1.70       173.  Did not t…          NA         NA
-## # … with 1,053 more rows, and 15 more variables: unpaid_leave_weeks &lt;dbl&gt;,
-## #   pct_unpaid &lt;dbl&gt;, partner &lt;chr&gt;, education &lt;chr&gt;, race &lt;chr&gt;,
-## #   job_type &lt;chr&gt;, unemploy_reason &lt;chr&gt;, food_insecurity &lt;dbl&gt;,
-## #   family_income &lt;chr&gt;, zipcode &lt;chr&gt;, postpartum_check &lt;chr&gt;, d7 &lt;dbl&gt;,
-## #   borough &lt;chr&gt;, neighborhood &lt;chr&gt;, pred &lt;dbl&gt;</code></pre>
-<pre class="r"><code>linear_df %&gt;% 
-  modelr::add_residuals(merged.lm) %&gt;% 
-  ggplot(aes(x = job_type, y = resid)) + geom_violin()</code></pre>
-<pre><code>## Warning: Removed 547 rows containing non-finite values (stat_ydensity).</code></pre>
-<p><img src="spatial_reg_analysis_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
-<pre class="r"><code>linear_df %&gt;% 
-  modelr::add_residuals(merged.lm) %&gt;% 
-  ggplot(aes(x = partner, y = resid)) + geom_violin()</code></pre>
-<pre><code>## Warning: Removed 547 rows containing non-finite values (stat_ydensity).</code></pre>
-<p><img src="spatial_reg_analysis_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
-<pre class="r"><code>linear_df %&gt;% 
-  modelr::add_residuals(merged.lm) %&gt;% 
-  ggplot(aes(x = leave_weeks, y = resid)) + geom_violin()</code></pre>
-<pre><code>## Warning: Removed 547 rows containing non-finite values (stat_ydensity).</code></pre>
-<p><img src="spatial_reg_analysis_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
-<pre class="r"><code>linear_df %&gt;% 
-  modelr::add_residuals(merged.lm) %&gt;% 
-  ggplot(aes(x = education, y = resid)) + geom_violin()</code></pre>
-<pre><code>## Warning: Removed 547 rows containing non-finite values (stat_ydensity).</code></pre>
-<p><img src="spatial_reg_analysis_files/figure-html/unnamed-chunk-10-4.png" width="672" /></p>
-<pre class="r"><code>linear_df %&gt;% 
-  modelr::add_residuals(merged.lm) %&gt;% 
-  ggplot(aes(x = race, y = resid)) + geom_violin()</code></pre>
-<pre><code>## Warning: Removed 547 rows containing non-finite values (stat_ydensity).</code></pre>
-<p><img src="spatial_reg_analysis_files/figure-html/unnamed-chunk-10-5.png" width="672" /></p>
-<pre class="r"><code>linear_df %&gt;% 
-  modelr::add_residuals(merged.lm) %&gt;% 
-  ggplot(aes(x = family_income, y = resid)) + geom_violin()</code></pre>
-<pre><code>## Warning: Removed 547 rows containing non-finite values (stat_ydensity).</code></pre>
-<p><img src="spatial_reg_analysis_files/figure-html/unnamed-chunk-10-6.png" width="672" /></p>
-<pre class="r"><code>linear_df %&gt;% 
-  modelr::add_residuals(merged.lm) %&gt;% 
-  ggplot(aes(x = borough, y = resid)) + geom_violin()</code></pre>
-<pre><code>## Warning: Removed 547 rows containing non-finite values (stat_ydensity).</code></pre>
-<p><img src="spatial_reg_analysis_files/figure-html/unnamed-chunk-10-7.png" width="672" /></p>
-</div>
-</div>
-<div id="results" class="section level2">
-<h2>Results</h2>
-<p>Because unpaid leave is likely related to income, and income is related to where a person lives, it is likely that there are spatial effects impactingrates of unpaid leave. To understand this,we ran a Univariate Local Moran’s I test, which was looking for spatial clusters of high and low unpaid leave weeks. This test seeks clusters that have a high number of unpaid leave weeks within the zipcode, but also in the zipcodes surrounding it. It also looks for clusters that have low local unpaid leave weeks and low unpaid leave weeks in the zip codes surrounding it. Finally, it looks for places where there is low leave locally but high leave amongst the zip code’s neighbors, and vice versa. This resulted in a Moran’s I statistic of 0.055 and a p-value = 0.2131, signifying that there were not significant spatial clusters. We could not move ahead with spatial analysis due to this finding, but it is likely that spatial clustering would exist with a more representative sample of NYC.</p>
-<p>After conducting this spatial analysis, we also ran a linear regression including a numberof important covariates identified in our exploratory analysis. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. We found an F-statistic of 6.907 with a p-value of &lt; 0.01 on the overall regression. More specifically, we found sigificance among the number of weeks of total leave (p &lt; 0.001). As weeks of total leave increases, so does the number of unpaid leave weeks. No other covariate was significant. This accounts for 64.35% of the relationship.</p>
 </div>
 
 <html>
@@ -811,6 +633,8 @@ Additional interactivity added using <a href="https://plot.ly/">plotly</a> (v4.9
 </html>
 
 
+</div>
+</div>
 
 </div>
 
@@ -842,7 +666,38 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
