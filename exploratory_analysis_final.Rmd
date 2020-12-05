@@ -123,7 +123,7 @@ parent =
 ggplotly(parent)
 ```
 
-This visualization shows that there is not a substantial difference of length of leave between mothers who are co-parents and single parents. 
+This visualization shows that there is not a substantial difference in length of leave between mothers who are co-parents and single parents. 
 
 
 ### Leave and Income
@@ -153,7 +153,7 @@ ggplotly(unpaid)
 
 ```
 
-This plot shows that mothers who are food insecure are clustered towards the lower side of family income; mothers who are food insecure tend to have a family income less than $40,000. Mothers whose family income is between 16,001 and 20,000 tend to have the shortest amount of unpaid leave. 
+This plot shows that mothers who are food-insecure are clustered towards the lower side of family income; mothers who are food-insecure tend to have a family income less than $40,000. Mothers whose family income is between $16,001 and $20,000 tend to have the shortest amount of unpaid leave. 
 
 
 ### Unpaid Leave and Job Type
@@ -174,7 +174,7 @@ job_type =
 ggplotly(job_type)
 ```
 
-This visualization shows that mothers who were self-employed were slightly more likely to have longer unpaid leave weeks. However, these values did not value substantially across groups. 
+This visualization shows that mothers who were self-employed were slightly more likely to have more unpaid leave weeks. However, these values did not vary substantially across groups. 
 
 ### Returning to Work
 
@@ -210,7 +210,7 @@ ggplotly(unemploy2)
 ```
 
 
-These visualizations shed light on the reason mothers were not back at work at the time of the survey. Choosing to stay at home was the most common response. However, it was disproportionately cited by mothers who were white and mothers who had a 4 year education or higher. 
+These visualizations shed light on the reason mothers were not back at work at the time of the survey. Choosing to stay at home was the most common response. However, it was disproportionately cited by mothers who were white and mothers who had 4 years of college education or higher. 
 
 ### Post Partum Check Up Status
 
@@ -233,5 +233,7 @@ ggplotly(check)
 ```
 
 Across all income categories, over 90% of mothers received a postpartum check up 4-6 weeks after giving birth. Mothers with a lower family income were more likely to not get a postpartum check up.
+
+### Summary
 
 These visualizations suggest there were not stark differences of leave by sociodemographic characteristics. However, New York City is a very heterogeneous city, with many pockets of inequality in close proximity.

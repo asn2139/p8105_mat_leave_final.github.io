@@ -416,7 +416,7 @@ div.tocify {
 </div>
 
 
-<p>This page describes the steps we took to perform a spatial analysis and build a linear regression model to test the association between taking unpaid leave in NYC, borough, and sociodemographic characteristics.</p>
+<p>This page describes the steps we took to perform a spatial analysis and build a linear regression model to test the association between, borough, sociodemographic characteristics, and unpaid leave in NYC.</p>
 <div id="key-results" class="section level2">
 <h2>Key Results</h2>
 <p>Because unpaid leave is likely related to income, and income is related to where a person lives, it is likely that there are spatial effects impacting rates of unpaid leave. To understand this,we ran a Univariate Local Moran’s I test, which was looking for spatial clusters of high and low unpaid leave weeks. This test seeks clusters that have a high number of unpaid leave weeks within the zipcode, but also in the zipcodes surrounding it. It also looks for clusters that have low local unpaid leave weeks and low unpaid leave weeks in the zip codes surrounding it. Finally, it looks for places where there is low leave locally but high leave amongst the zip code’s neighbors, and vice versa. This resulted in a Moran’s I statistic of 0.055 and a p-value = 0.2131, signifying that there were not significant spatial clusters. We could not move ahead with spatial analysis due to this finding, but it is likely that spatial clustering would exist with a more representative sample of NYC.</p>

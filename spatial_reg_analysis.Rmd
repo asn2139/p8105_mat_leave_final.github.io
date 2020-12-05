@@ -7,7 +7,7 @@ output:
     code_folding: hide
 ---
 
-This page describes the steps we took to perform a spatial analysis and build a linear regression model to test the association between taking unpaid leave in NYC, borough, and sociodemographic characteristics.
+This page describes the steps we took to perform a spatial analysis and build a linear regression model to test the association between, borough, sociodemographic characteristics, and unpaid leave in NYC.
 
 ## Key Results
 

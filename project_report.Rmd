@@ -58,7 +58,7 @@ Our goal was to explore the racial, economic, and geographic factors related to 
 
 ## Data {.tabset}
 
-Our data were taken from the New York City Work and Family Leave Survey [WFLS](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe). The telephone survey was conducted in March 2016 to collect information on the availability and accessibility of paid family leave among working parents. The WFLS also sought to describe the role that paid family leave policies play in achieving health equity for parents and children. The baseline findings from this survey can be found in the [Paid Family Leave Report](https://www1.nyc.gov/assets/doh/downloads/pdf/hca/paid-family-leave-report1.pdf). 
+Our data were taken from the [New York City Work and Family Leave Survey (WFLS)](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe). The telephone survey was conducted in March 2016 to collect information on the availability and accessibility of paid family leave among working parents. The WFLS also sought to describe the role that paid family leave policies play in achieving health equity for parents and children. The baseline findings from this survey can be found in the [Paid Family Leave Report](https://www1.nyc.gov/assets/doh/downloads/pdf/hca/paid-family-leave-report1.pdf). 
 
 We obtained the data from the [NYC Open Data](https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe). From here, we exported the data as a csv file. The raw dataset contained 1063 rows, and 153 columns. We created new variables based on data dictionary with descriptive names and responses, rather than the numeric responses in the original csv file. We then merged the cleaned data with a NYC zipcode shape file (available in the "maps" folder on our project GitHub.
 
@@ -311,10 +311,10 @@ Figure 3 illustrates that white mothers were over represented in this sample. Fi
 
 ## Exploratory Analysis 
 
-After getting a sense of the distribution across key variables, our exploratory analysis aimed to examine how the length of leave varied by sociodemographic characteristics. We looked at paid and total length of leave by race, leave by parenting status, leave by job type, and leave by income. We also looked at reasons for unemployment across race and education. Lastly, we examined postpartum checkup status by income. You can find that analysis [here](https://asn2139.github.io/p8105_mat_leave_final.github.io/exploratory_analysis_final.html)
+After getting a sense of the distribution across key variables, our exploratory analysis aimed to examine how the length of leave varied by sociodemographic characteristics. We looked at paid and total length of leave by race, leave by parenting status, leave by job type, and leave by income. We also looked at reasons for unemployment across race and education. Lastly, we examined postpartum checkup status by income. You can find that analysis [here](https://asn2139.github.io/p8105_mat_leave_final.github.io/exploratory_analysis_final.html).
 
 
-To allow website visitors to see how leave varies according to neighborhood in NYC and by the sociodemographic characteristics they care about most, we created an interactive [tool](https://meb2308.shinyapps.io/shiny/). 
+To allow website visitors to see how leave varies according to neighborhood in NYC and by the sociodemographic characteristics they care about most, we created an [interactive tool](https://meb2308.shinyapps.io/shiny/). 
 
 We also wanted to incorporate geography by neighborhood. To see how sociodemographic characteristics vary by neighborhood, see our [Leaflet Map](leaflet.html) tab. 
 
@@ -344,7 +344,7 @@ Lastly, an important limitation to note is that paternal and maternal leave are 
 
 ### Next Steps
 
-We believe that this project will be useful for creating a baseline that future analyses can use to assess the impact of New York's Paid Family Leave Law. These results may also be useful in understanding leave patterns in other states with geographical disparities. 
+We believe that this project will be useful for creating a baseline that future analyses can use to assess the impact of New York's Paid Family Leave Law. These results may also be useful in understanding leave patterns in other cities with geographical disparities. 
   
 
   
