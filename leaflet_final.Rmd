@@ -271,4 +271,4 @@ The majority of respondents across zip codes were employed by private companies.
 
 ### Summary
 
-Overall, these maps suggest that type of maternity leave, length of unpaid leave, and sociodemographic characteristics are clustered geographically in New York City. We performed a spacial analysis and regression to formally test these associations, the results of which can be found on our [regression page](add regression HTML).
+Overall, these maps suggest that type of maternity leave, length of unpaid leave, and sociodemographic characteristics are clustered geographically in New York City. We performed a spacial analysis and regression to formally test these associations, the results of which can be found on our [regression page](https://asn2139.github.io/p8105_mat_leave_final.github.io/spatial_reg_analysis.html).
