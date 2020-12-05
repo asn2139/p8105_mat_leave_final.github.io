@@ -70,7 +70,8 @@ Our cleaned data consists of 1,063 rows and 20 columns. It includes information 
 
 Tidying Data and Creating Relevant Variables 
 
-![](images/tidying.jpg)
+<img src ="images/tidying.jpg" style = "width:50%">
+
 ```{r}
 wfls_df = 
   read_csv("./data/WFLS_2014.csv") %>% 
@@ -177,14 +178,16 @@ wfls_df %>%
 ### Step 2 
 Save cleaned data set and merge with NYC Zipcodes Data
 
-![](images/csv.png)
+<img src ="images/csv.png" style = "width:30%">
+
 ```{r}
 write.csv(wfls_df, "./data/cleaned_wfls.csv")
 ```
 
 ### Step 3 
 Final Merge of All Relevant Datasets
-![](images/merging shot.png)
+
+<img src ="images/merging shot.png" style = "width:60%">
 
 ```{r}
 cleaned_wfls = 
@@ -315,21 +318,19 @@ Figure 3 illustrates that white mothers were over represented in this sample. Fi
 
 ## Exploratory Analysis 
 
-After getting a sense of the distribution across key variables, our exploratory analysis aimed to examine how the length of leave varied by sociodemographic characteristics. We looked at paid and total length of leave by race, leave by parenting status, leave by job type, and leave by income. We also looked at reasons for unemployment across race and education. Lastly, we examined postpartum checkup status by income. You can find that analysis [here](https://asn2139.github.io/p8105_mat_leave_final.github.io/exploratory_analysis_final.html).
+After getting a sense of the distribution across key variables, our exploratory analysis aimed to examine how the length of leave varied by sociodemographic characteristics. We looked at paid and total length of leave by race, leave by parenting status, leave by job type, and leave by income. We also looked at reasons for unemployment across race and education. Lastly, we examined postpartum checkup status by income. You can find that analysis [here](exploratory_analysis_final.html).
 
 
 To allow website visitors to see how leave varies according to neighborhood in NYC and by the sociodemographic characteristics they care about most, we created an [interactive tool](https://meb2308.shinyapps.io/shiny/). 
 
-We also wanted to incorporate geography by neighborhood. To see how sociodemographic characteristics vary by neighborhood, see our [Leaflet Map](leaflet.html) tab. 
+We also wanted to incorporate geography by neighborhood. To see how sociodemographic characteristics vary by neighborhood, see our [Leaflet Map](leaflet_final.html) tab. 
 
 
 ## Spatial Analysis and Regression
 
 We ran a Univariate Local Moran’s I test to look for spatial clusters of high and low unpaid leave weeks. It looks for clusters in the same zipcode and surrounding zipcodes and identifies places where length of leave is low within a zip code but high within neighboring zip codes, and vice versa. Since the Moran’s I statistic was 0.055 and had a p-value = 0.2131, we could not move forward with a spacial analysis since there were no significant spatial clusters. 
 
-After conducting this spatial analysis, we also ran a linear regression including a number of important covariates identified in our exploratory analyses. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. 
-
-[Shortcut](https://asn2139.github.io/p8105_mat_leave_final.github.io/spatial_reg_analysis.html)
+After conducting this spatial analysis, we also ran a linear regression including a number of important covariates identified in our exploratory analyses. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. View this analysis [here](spatial_reg_analysis.html).
 
 
 ## Discussion 
@@ -340,7 +341,7 @@ Given these findings, we wanted to better understand the role geography plays in
 
 **Limitations**
 
-As a whole, we were surprised with the lack of significant findings and spatial clusters. We believe this may be related to the limited participation of women of racial minorities and low income groups. Among all participants, 470 were white and 337 participants were non white. In addition, many women did not provide complete information across questions, resulting in a large number of "NA" responses. The way income categories were created may also have contributed to our lack of significant findings. The highest income category was a family income of greater than 80,000, which may mask heterogeneity as the median family income in New York City is $63,799, according to the U.S. Census. 
+Overall, we were surprised by the lack of significant findings and spatial clusters. We believe this may be related to the limited participation of women of racial minorities and low income groups. Among all participants, 470 were white and 337 participants were non white. In addition, many women did not provide complete information across questions, resulting in a large number of "NA" responses. The way income categories were created may also have contributed to our lack of significant findings. The highest income category was a family income of greater than 80,000, which may mask heterogeneity as the median family income in New York City is $63,799, according to the U.S. Census. 
 
 Our project concept changed throughout this process. We attempted to build a tool in Shiny to reveal the average length of leave taken by women with a series of user specified characteristics, but soon realized that we did not have enough data points to obtain this. In addition, data were missing for some neighborhoods included in the final shiny tool.
   

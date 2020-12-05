@@ -29,15 +29,6 @@
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-      </style>
-
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css">
   pre:not([class]) {
@@ -443,7 +434,7 @@ h1.title {
 <div id="step-1" class="section level3">
 <h3>Step 1</h3>
 <p>Tidying Data and Creating Relevant Variables</p>
-<p><img src="images/tidying.jpg" /></p>
+<p><img src ="images/tidying.jpg" style = "width:50%"></p>
 <pre class="r"><code>wfls_df = 
   read_csv(&quot;./data/WFLS_2014.csv&quot;) %&gt;% 
   mutate(
@@ -546,12 +537,13 @@ wfls_df %&gt;%
 <div id="step-2" class="section level3">
 <h3>Step 2</h3>
 <p>Save cleaned data set and merge with NYC Zipcodes Data</p>
-<p><img src="images/csv.png" /></p>
+<p><img src ="images/csv.png" style = "width:30%"></p>
 <pre class="r"><code>write.csv(wfls_df, &quot;./data/cleaned_wfls.csv&quot;)</code></pre>
 </div>
 <div id="step-3" class="section level3">
 <h3>Step 3</h3>
-<p>Final Merge of All Relevant Datasets <img src="images/merging%20shot.png" /></p>
+<p>Final Merge of All Relevant Datasets</p>
+<p><img src ="images/merging%20shot.png" style = "width:60%"></p>
 <pre class="r"><code>cleaned_wfls = 
   read_csv(&quot;./data/cleaned_wfls.csv&quot;)
 
@@ -660,15 +652,14 @@ income</code></pre>
 </div>
 <div id="exploratory-analysis" class="section level2">
 <h2>Exploratory Analysis</h2>
-<p>After getting a sense of the distribution across key variables, our exploratory analysis aimed to examine how the length of leave varied by sociodemographic characteristics. We looked at paid and total length of leave by race, leave by parenting status, leave by job type, and leave by income. We also looked at reasons for unemployment across race and education. Lastly, we examined postpartum checkup status by income. You can find that analysis <a href="https://asn2139.github.io/p8105_mat_leave_final.github.io/exploratory_analysis_final.html">here</a>.</p>
+<p>After getting a sense of the distribution across key variables, our exploratory analysis aimed to examine how the length of leave varied by sociodemographic characteristics. We looked at paid and total length of leave by race, leave by parenting status, leave by job type, and leave by income. We also looked at reasons for unemployment across race and education. Lastly, we examined postpartum checkup status by income. You can find that analysis <a href="exploratory_analysis_final.html">here</a>.</p>
 <p>To allow website visitors to see how leave varies according to neighborhood in NYC and by the sociodemographic characteristics they care about most, we created an <a href="https://meb2308.shinyapps.io/shiny/">interactive tool</a>.</p>
-<p>We also wanted to incorporate geography by neighborhood. To see how sociodemographic characteristics vary by neighborhood, see our <a href="leaflet.html">Leaflet Map</a> tab.</p>
+<p>We also wanted to incorporate geography by neighborhood. To see how sociodemographic characteristics vary by neighborhood, see our <a href="leaflet_final.html">Leaflet Map</a> tab.</p>
 </div>
 <div id="spatial-analysis-and-regression" class="section level2">
 <h2>Spatial Analysis and Regression</h2>
 <p>We ran a Univariate Local Moran’s I test to look for spatial clusters of high and low unpaid leave weeks. It looks for clusters in the same zipcode and surrounding zipcodes and identifies places where length of leave is low within a zip code but high within neighboring zip codes, and vice versa. Since the Moran’s I statistic was 0.055 and had a p-value = 0.2131, we could not move forward with a spacial analysis since there were no significant spatial clusters.</p>
-<p>After conducting this spatial analysis, we also ran a linear regression including a number of important covariates identified in our exploratory analyses. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took.</p>
-<p><a href="https://asn2139.github.io/p8105_mat_leave_final.github.io/spatial_reg_analysis.html">Shortcut</a></p>
+<p>After conducting this spatial analysis, we also ran a linear regression including a number of important covariates identified in our exploratory analyses. These covariates included job type, whether the parent had a partner, the number of weeks of leave they took total, the level of education they attained, and their race, income, and borough. The outcome was the number of weeks of unpaid leave they took. View this analysis <a href="spatial_reg_analysis.html">here</a>.</p>
 </div>
 <div id="discussion" class="section level2">
 <h2>Discussion</h2>
