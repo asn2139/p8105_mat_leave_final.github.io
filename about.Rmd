@@ -7,6 +7,7 @@ output:
     toc_float: true
 ---
 
+![](images/nyc.png)
 This website uses data from the 2016 New York City Work and Family Leave Survey to explore the length and geographic distribution of family leave in New York City. Continue reading this About page to learn about the motivations for this project. Visit the [Exploratory Analyses](exploratory_analysis_final.html) and [Leaflet Maps](leaflet_final.html) pages to see visualizations of paid and unpaid leave in NYC by important social, economic, and demographic characteristics. You can explore the data used for this project yourself in [Closer Look at the Data](https://meb2308.shinyapps.io/shiny/) and learn how we tested the significance of spacial clusters in [Spacial Analysis and Regression](spacial_ref_analysis.html).
 
 <br>
