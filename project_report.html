@@ -438,9 +438,11 @@ h1.title {
 <p>We obtained the data from the <a href="https://data.cityofnewyork.us/Health/New-York-City-Work-and-Family-Leave-Survey-WFLS-20/grnn-mvqe">NYC Open Data</a>. From here, we exported the data as a csv file. The raw dataset contained 1063 rows, and 153 columns. We created new variables based on data dictionary with descriptive names and responses, rather than the numeric responses in the original csv file. We then merged the cleaned data with a NYC zipcode shape file (available in the “maps” folder on our project GitHub.</p>
 <p>Our cleaned data consists of 1,063 rows and 20 columns. It includes information on the variables below.</p>
 </div>
-<div id="data-cleaning" class="section level2">
+<div id="data-cleaning" class="section level2 tabset">
 <h2>Data Cleaning</h2>
-<p>Step 1: Tidying Data and Creating Relevant Variables</p>
+<div id="step-1" class="section level3">
+<h3>Step 1</h3>
+<p>Tidying Data and Creating Relevant Variables</p>
 <p><img src="images/tidying.jpg" /></p>
 <pre class="r"><code>wfls_df = 
   read_csv(&quot;./data/WFLS_2014.csv&quot;) %&gt;% 
@@ -540,11 +542,16 @@ wfls_df %&gt;%
   select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;: &quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;postpartum_check&quot;, &quot;d7&quot;) %&gt;% 
   select(&quot;ph1&quot;:&quot;el1&quot;, &quot;el9&quot;, &quot;el11&quot;, &quot;el13a&quot;:&quot;el17f&quot;, &quot;ih1&quot;, &quot;mh4&quot;, &quot;es1a&quot;:&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;pct_unpaid&quot;, &quot;partner&quot;:&quot;zipcode&quot;, &quot;postpartum_check&quot;, &quot;d7&quot;) %&gt;% 
   select(&quot;es3&quot;, &quot;SAMP_WEIGHT&quot;, &quot;POP_WEIGHT&quot;, &quot;leave_type&quot;:&quot;zipcode&quot;,&quot;postpartum_check&quot;, &quot;d7&quot;)</code></pre>
-<p>Step 2: Save cleaned data set and merge with NYC zipcodes data</p>
+</div>
+<div id="step-2" class="section level3">
+<h3>Step 2</h3>
+<p>Save cleaned data set and merge with NYC Zipcodes Data</p>
 <p><img src="images/csv.png" /></p>
 <pre class="r"><code>write.csv(wfls_df, &quot;./data/cleaned_wfls.csv&quot;)</code></pre>
-<p>Step 3: Final Merge of All Relevant Datasets</p>
-<p><img src="images/merging%20shot.png" /></p>
+</div>
+<div id="step-3" class="section level3">
+<h3>Step 3</h3>
+<p>Final Merge of All Relevant Datasets <img src="images/merging%20shot.png" /></p>
 <pre class="r"><code>cleaned_wfls = 
   read_csv(&quot;./data/cleaned_wfls.csv&quot;)
 
@@ -556,6 +563,7 @@ merged_wfls =
   left_join(cleaned_wfls, zipcodes, by = &quot;zipcode&quot;)
 
 write.csv(merged_wfls, &quot;./data/merged_wfls.csv&quot;)</code></pre>
+</div>
 </div>
 <div id="variables-of-interest" class="section level2">
 <h2>Variables of interest</h2>
@@ -684,7 +692,7 @@ income</code></pre>
 <small>
   
 <p style="text-align: center;">
-  Akanksha Nalatwad (asn2139), Amanda Warnock (AmandaWarnock), Meghan Bellerose (meb2308), Karina Myers (km3529)   
+  Akanksha Nalatwad (asn2139), Amanda Warnock (aw2351), Meghan Bellerose (meb2308), Karina Myers (km3529)   
 </p>
 
 <p style="text-align: center;">

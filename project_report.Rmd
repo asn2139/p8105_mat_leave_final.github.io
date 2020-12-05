@@ -64,9 +64,11 @@ We obtained the data from the [NYC Open Data](https://data.cityofnewyork.us/Heal
 
 Our cleaned data consists of 1,063 rows and 20 columns. It includes information on the variables below. 
 
-## Data Cleaning
+## Data Cleaning {.tabset}
 
-Step 1: Tidying Data and Creating Relevant Variables
+### Step 1 
+
+Tidying Data and Creating Relevant Variables 
 
 ![](images/tidying.jpg)
 ```{r}
@@ -171,15 +173,17 @@ wfls_df %>%
 
 ```
 
-Step 2: Save cleaned data set and merge with NYC zipcodes data
+
+### Step 2 
+Save cleaned data set and merge with NYC Zipcodes Data
 
 ![](images/csv.png)
 ```{r}
 write.csv(wfls_df, "./data/cleaned_wfls.csv")
 ```
 
-Step 3: Final Merge of All Relevant Datasets
-
+### Step 3 
+Final Merge of All Relevant Datasets
 ![](images/merging shot.png)
 
 ```{r}
