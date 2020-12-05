@@ -17,7 +17,7 @@ navbar:
     - text: "Project Report"
       href: project_report.html
     - icon: fa-youtube fa-lg
-      href: https://www.youtube.com/watch?v=ahPeclU9VW0
+      href: https://www.youtube.com/watch?v=IKIqRLpjr34&feature=youtu.be
     - icon: fa-github fa-lg
       href: https://github.com/asn2139/p8105_mat_leave_final.github.io
 output:
